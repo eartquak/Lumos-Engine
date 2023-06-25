@@ -30,6 +30,15 @@
 *.exe
 *.out
 *.app
+<<<<<<< HEAD
 
 # Build folder
 build/
+
+
+# VS files
+.vs/
+
+#Binaries and Intermediates folders
+Binaries/
+Intermediates/
