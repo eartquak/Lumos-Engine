@@ -1,3 +1,0 @@
-/home/adarsh/Adarsh Data/Adarsh_Coding/Lumos-Engine/build/CMakeFiles/Lumos-Engine.dir
-/home/adarsh/Adarsh Data/Adarsh_Coding/Lumos-Engine/build/CMakeFiles/edit_cache.dir
-/home/adarsh/Adarsh Data/Adarsh_Coding/Lumos-Engine/build/CMakeFiles/rebuild_cache.dir
