@@ -16,10 +16,12 @@
     <ClInclude Include="src\Lumos\EntryPoint.h">
       <Filter>Lumos</Filter>
     </ClInclude>
+    <ClInclude Include="src\Lumos\Log.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Lumos\Application.cpp">
       <Filter>Lumos</Filter>
     </ClCompile>
+    <ClCompile Include="src\Lumos\Log.cpp" />
   </ItemGroup>
 </Project>
