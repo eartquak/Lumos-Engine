@@ -12,7 +12,6 @@ namespace Lumos{
 	}
 	void Application::Run()
 	{
-		std::cout << "Welcome to Lumos-Engine!";
 		while (1);
 	}
 }

@@ -5,7 +5,7 @@ class Sandbox : public Lumos::Application
 public:
 	Sandbox()
 	{
-
+		LOG_INFO("Application Created");
 	}
 
 	~Sandbox()
