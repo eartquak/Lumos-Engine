@@ -17,6 +17,10 @@
       <Filter>Lumos</Filter>
     </ClInclude>
     <ClInclude Include="src\Lumos\Log.h" />
+    <ClInclude Include="src\Lumos\Events\Event.h" />
+    <ClInclude Include="src\Lumos\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Lumos\Events\KeyEvent.h" />
+    <ClInclude Include="src\Lumos\Core\KeyCodes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Lumos\Application.cpp">
