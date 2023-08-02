@@ -93,6 +93,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Lumos\Core\KeyCodes.h" />
+    <ClInclude Include="src\Lumos\Events\ApplicationEvent.h" />
+    <ClInclude Include="src\Lumos\Events\Event.h" />
+    <ClInclude Include="src\Lumos\Events\KeyEvent.h" />
     <ClInclude Include="src\Lumos\Log.h" />
     <ClInclude Include="src\Lumos.h" />
     <ClInclude Include="src\Lumos\Application.h" />
