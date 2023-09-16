@@ -1,3 +1,0 @@
-[submodule "Lumos/Dependencies/spdlog"]
-	path = Lumos/Dependencies/spdlog
-	url = https://github.com/gabime/spdlog.git

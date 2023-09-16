@@ -37,6 +37,7 @@ build/
 
 # VS files
 .vs/
+.vscodce/
 
 #Binaries and Intermediates folders
 Binaries/
