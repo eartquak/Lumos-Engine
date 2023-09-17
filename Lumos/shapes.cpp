@@ -1,8 +1,8 @@
 #pragma once
 // #include "freeglut-3.4.0/include/GL/glut.h"
 #include <cmath>
-#include <iostream>
 #include <glm/glm.hpp>
+#include <iostream>
 
 #include "data.cpp"
 
@@ -47,8 +47,8 @@ class Quad : public Shape {
             case PointType::Pixel: {
                 this->position.x = (this->position.x / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
                 this->position.y = (this->position.y / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
-                this->width = (max_x - min_x) / static_cast<float>(WINDOW_WIDTH);
-                this->height = (max_y - min_y) / static_cast<float>(WINDOW_HEIGHT);
+                this->width = (max_x - min_x) / static_cast<float>(WINDOW_WIDTH) * 2.0f - 1.0f;
+                this->height = (max_y - min_y) / static_cast<float>(WINDOW_HEIGHT) * 2.0f - 1.0f;
                 break;
             }
             case PointType::Fraction: {
@@ -71,8 +71,8 @@ class Quad : public Shape {
             case PointType::Pixel: {
                 this->position.x = (this->position.x / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
                 this->position.y = (this->position.y / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
-                this->width = static_cast<float>(width) / static_cast<float>(WINDOW_WIDTH);
-                this->height = static_cast<float>(height) / static_cast<float>(WINDOW_HEIGHT);
+                this->width = static_cast<float>(width) / static_cast<float>(WINDOW_WIDTH) * 2.0f;
+                this->height = static_cast<float>(height) / static_cast<float>(WINDOW_HEIGHT) * 2.0f;
                 break;
             }
             case PointType::Fraction: {
@@ -90,6 +90,8 @@ class Quad : public Shape {
         if (!this->is_visible) {
             return;
         }
+
+        std::cout << this->width << ", " << this->height << std::endl;
 
         glBegin(GL_QUADS);
         glColor3f(color.r, color.g, color.b);  // Set the color
@@ -122,9 +124,9 @@ class Point : public Shape {
         this->size = size;
     }
 
-    Point(const std::vector<float>& coordinates, const std::vector<float>& color, PointType point_type = PointType::Fraction)
-        : Shape({coordinates[0], coordinates[1]}, {color[0], color[1], color[2]}) {
-    }
+    // Point(const std::vector<float>& coordinates, const std::vector<float>& color, PointType point_type = PointType::Fraction)
+    //     : Shape({coordinates[0], coordinates[1]}, {color[0], color[1], color[2]}) {
+    // }
 
     void draw() override {
         if (!this->is_visible) {
@@ -257,7 +259,7 @@ class Line2D : public Shape {
 };
 
 class Triangle : public Shape {
-public:
+   public:
     glm::vec2 p1, p2, p3;
 
     Triangle(const glm::vec2& point1, const glm::vec2& point2, const glm::vec2& point3, const glm::vec3& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
@@ -294,5 +296,3 @@ public:
         glFlush();
     }
 };
-
-

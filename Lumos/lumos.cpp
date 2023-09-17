@@ -86,7 +86,7 @@ class App {
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Physics, Rendering, etc. here
-        for (std::function<void()> function : startup_functions) {
+        for (std::function<void()>& function : startup_functions) {
             function();
         }
 
@@ -94,7 +94,7 @@ class App {
         while (!glfwWindowShouldClose(this->window)) {
             glClear(GL_COLOR_BUFFER_BIT);
             // Render here
-            for (std::function<void()> function : update_functions) {
+            for (std::function<void()>& function : update_functions) {
                 function();
             }
 
