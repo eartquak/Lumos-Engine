@@ -256,20 +256,25 @@ class Line2D : public Shape {
     }
 };
 
-class BezierCurve : public Shape {
-   public:
-    std::vector<Vec2> controlPoints;
-    int segments;
+class Triangle : public Shape {
+public:
+    Vec2 p1, p2, p3;
 
-    BezierCurve(std::vector<Vec2>& controlPoints, const Color& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
-        : Shape(Vec2{0.0f, 0.0f}, color), controlPoints(controlPoints) {
-        this->segments = controlPoints.size();
-        this->controlPoints = controlPoints;
+    Triangle(const Vec2& point1, const Vec2& point2, const Vec2& point3, const Color& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
+        : Shape(Vec2{0.0f, 0.0f}, color) {
+        p1 = point1;
+        p2 = point2;
+        p3 = point3;
+
         if (point_type == PointType::Pixel) {
-            for (Vec2& cp : this->controlPoints) {
-                cp.x = (cp.x / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
-                cp.y = (cp.y / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
-            }
+            p1.x = (p1.x / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
+            p1.y = (p1.y / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
+
+            p2.x = (p2.x / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
+            p2.y = (p2.y / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
+
+            p3.x = (p3.x / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
+            p3.y = (p3.y / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
         }
     }
 
@@ -278,26 +283,16 @@ class BezierCurve : public Shape {
             return;
         }
 
-        glBegin(GL_LINE_STRIP);
+        glBegin(GL_TRIANGLES);
         glColor3f(color.r, color.g, color.b);
 
-        if (segments >= 4) {
-            for (int i = 0; i <= segments; ++i) {
-                float t = static_cast<float>(i) / static_cast<float>(segments);
-                float u = 1.0f - t;
-                float coef0 = u * u * u;
-                float coef1 = 3.0f * u * u * t;
-                float coef2 = 3.0f * u * t * t;
-                float coef3 = t * t * t;
-
-                float x = coef0 * controlPoints[0].x + coef1 * controlPoints[1].x + coef2 * controlPoints[2].x + coef3 * controlPoints[3].x;
-                float y = coef0 * controlPoints[0].y + coef1 * controlPoints[1].y + coef2 * controlPoints[2].y + coef3 * controlPoints[3].y;
-
-                glVertex2f(x, y);
-            }
-        }
+        glVertex2f(p1.x, p1.y);
+        glVertex2f(p2.x, p2.y);
+        glVertex2f(p3.x, p3.y);
 
         glEnd();
         glFlush();
     }
 };
+
+
