@@ -11,5 +11,5 @@ glewDep = dependency('glew')
 glfwDep = dependency('glfw3')
 
 # Define your executable and sources
-executable('debug', 'Test/moving_rect.cpp', dependencies : [glfwDep, glewDep, openGLDep])
+executable('debug', 'Test/primitive.cpp', dependencies : [glfwDep, glewDep, openGLDep])
 

@@ -7,8 +7,11 @@
 #include <iostream>
 #include <vector>
 
-#include "shapes.cpp"
 #include "math.cpp"
+#include "shapes.cpp"
+#include "data.cpp"
+int WINDOW_HEIGHT;
+int WINDOW_WIDTH;
 
 enum SystemType {
     Startup,
@@ -22,7 +25,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 
 class App {
    private:
-    int window_width, window_height;
     const char* window_title;
     GLFWwindow* window;
     std::vector<std::function<void()>> startup_functions;
@@ -37,7 +39,7 @@ class App {
         }
 
         // Create a GLFW window
-        GLFWwindow* window = glfwCreateWindow(this->window_width, this->window_height, this->window_title, nullptr, nullptr);
+        GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, this->window_title, nullptr, nullptr);
         this->window = window;
 
         if (!window) {
@@ -62,8 +64,8 @@ class App {
 
    public:
     App(int window_width, int window_height, const char* window_title) {
-        this->window_width = window_width;
-        this->window_height = window_height;
+        WINDOW_WIDTH = window_width;
+        WINDOW_HEIGHT = window_height;
         this->window_title = window_title;
     }
 
@@ -88,6 +90,7 @@ class App {
     void run() {
         std::cout << "Running the application..." << std::endl;
         this->create_window();
+        glClear(GL_COLOR_BUFFER_BIT);
 
         // Physics, Rendering, etc. here
         for (std::function<void()> function : startup_functions) {
@@ -96,6 +99,7 @@ class App {
 
         // Main loop
         while (!glfwWindowShouldClose(this->window)) {
+            glClear(GL_COLOR_BUFFER_BIT);
             // Render here
             for (std::function<void()> function : update_functions) {
                 function();
