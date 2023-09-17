@@ -213,3 +213,40 @@ class Circle : public Shape {
         }
     }
 };
+
+class Line2D : public Shape {
+   public:
+    std::vector<Vec2> points;
+
+    Line2D(std::vector<Vec2>& points, const Color& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
+        : Shape(Vec2{0.0f, 0.0f}, color), points(points) {
+        switch (point_type) {
+            case PointType::Pixel: {
+                for (Vec2& point : points) {
+                    point.x = (point.x / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
+                    point.y = (point.y / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
+                }
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    void draw() override {
+        if (!is_visible || points.size() < 2) {
+            return;
+        }
+
+        glBegin(GL_LINES);
+        glColor3f(color.r, color.g, color.b);
+
+        for (size_t i = 0; i < points.size() - 1; ++i) {
+            glVertex2f(points[i].x, points[i].y);
+            glVertex2f(points[i + 1].x, points[i + 1].y);
+        }
+
+        glEnd();
+        glFlush();
+    }
+};

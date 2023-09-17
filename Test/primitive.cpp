@@ -12,12 +12,8 @@ int main() {
     // Create a circle
     Circle* circle = new Circle(Vec2{0.5f, 0.0f}, Color{0.0f, 0.0f, 1.0f}, 10.0f);
 
-    // Create Points (a vector of points)
-    // std::vector<Vec2> points;
-    // points.push_back(Vec2{-0.2f, -0.2f});
-    // points.push_back(Vec2{0.2f, -0.2f});
-    // points.push_back(Vec2{0.0f, 0.2f});
-    // Points* pointsShape = new Points(points, Color{0.0f, 0.0f, 1.0f});
+    std::vector<Vec2> points = {Vec2{0.0f, 0.0f}, Vec2{1.0f, 1.0f}};
+    Line2D* line = new Line2D(points, Color{1.0, 1.0, 1.0}, PointType::Fraction);
 
     app.add_system(SystemType::Update, [&box]() {
            box->draw();
@@ -27,6 +23,9 @@ int main() {
         })
         .add_system(SystemType::Update, [&circle]() {
             circle->draw();
+        })
+        .add_system(SystemType::Update, [&line]() {
+            line->draw();
         })
         .run();
 }
