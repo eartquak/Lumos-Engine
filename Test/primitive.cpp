@@ -20,8 +20,6 @@ int main() {
     controlPoints.push_back(Vec2{200.0f, 300.0f});  // Second control point
     controlPoints.push_back(Vec2{300.0f, 100.0f});  // Third control point
 
-    BezierCurve* bezier_curve = new BezierCurve(controlPoints, Color{1.0f, 1.0f, 1.0f}, PointType::Pixel);
-
     Triangle* tri = new Triangle(Vec2{100.0f, 100.0f}, Vec2{200.0f, 300.0f},Vec2{300.0f, 100.0f} , Color{1.0f, 1.0f, 1.0f}, PointType::Pixel);
 
     app.add_system(SystemType::Update, [&box]() {
@@ -35,9 +33,6 @@ int main() {
         })
         .add_system(SystemType::Update, [&line]() {
             line->draw();
-        })
-        .add_system(SystemType::Update, [&bezier_curve]() {
-            bezier_curve->draw();
         })
         .add_system(SystemType::Update, [&tri]() {
             tri->draw();
