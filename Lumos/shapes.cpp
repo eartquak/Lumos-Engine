@@ -84,21 +84,22 @@ class Quad : public Shape {
             default:
                 break;
         }
-        std::cout << this->width << this->height << std::endl;
     }
 
     void draw() override {
-        if (this->is_visible) {
-            glBegin(GL_QUADS);
-            glColor3f(color.r, color.g, color.b);  // Set the color
-            glVertex2f(position.x, position.y);
-            glVertex2f(position.x + width, position.y);
-            glVertex2f(position.x + width, position.y + height);
-            glVertex2f(position.x, position.y + height);
-            glEnd();
-
-            glFlush();
+        if (!this->is_visible) {
+            return;
         }
+
+        glBegin(GL_QUADS);
+        glColor3f(color.r, color.g, color.b);  // Set the color
+        glVertex2f(position.x, position.y);
+        glVertex2f(position.x + width, position.y);
+        glVertex2f(position.x + width, position.y + height);
+        glVertex2f(position.x, position.y + height);
+        glEnd();
+
+        glFlush();
     }
 };
 
@@ -126,15 +127,17 @@ class Point : public Shape {
     }
 
     void draw() override {
-        if (this->is_visible) {
-            glPointSize(this->size);
-            glBegin(GL_POINTS);
-            glColor3f(color.r, color.g, color.b);
-            glVertex2f(position.x, position.y);
-            glEnd();
-
-            glFlush();
+        if (!this->is_visible) {
+            return;
         }
+
+        glPointSize(this->size);
+        glBegin(GL_POINTS);
+        glColor3f(color.r, color.g, color.b);
+        glVertex2f(position.x, position.y);
+        glEnd();
+
+        glFlush();
     }
 };
 
@@ -170,46 +173,48 @@ class Circle : public Shape {
     }
 
     void draw() override {
-        if (this->is_visible) {
-            int numSegments = 100;  // Adjust the number of segments for smoother or coarser circles
-            if (this->shaded) {
-                glBegin(GL_TRIANGLE_FAN);  // Use GL_TRIANGLE_FAN to draw a filled circle
+        if (!is_visible) {
+            return;
+        }
 
-                glColor3f(color.r, color.g, color.b);
+        int numSegments = 100;  // Adjust the number of segments for smoother or coarser circles
+        if (this->shaded) {
+            glBegin(GL_TRIANGLE_FAN);  // Use GL_TRIANGLE_FAN to draw a filled circle
 
-                // Center of the circle
-                glVertex2f(this->position.x, this->position.y);
+            glColor3f(color.r, color.g, color.b);
 
-                for (int i = 0; i <= numSegments; i++) {
-                    float theta = 2.0f * M_PI * static_cast<float>(i) / static_cast<float>(numSegments);
-                    float x = radius * cos(theta) / static_cast<float>(WINDOW_WIDTH) * 10.0f;
-                    // float x = (radius * cos(theta) / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
-                    float y = radius * sin(theta) / static_cast<float>(WINDOW_HEIGHT) * 10.0f;
-                    // float y = (radius * sin(theta) / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
+            // Center of the circle
+            glVertex2f(this->position.x, this->position.y);
 
-                    glVertex2f(this->position.x + x, this->position.y + y);
-                }
+            for (int i = 0; i <= numSegments; i++) {
+                float theta = 2.0f * M_PI * static_cast<float>(i) / static_cast<float>(numSegments);
+                float x = radius * cos(theta) / static_cast<float>(WINDOW_WIDTH) * 10.0f;
+                // float x = (radius * cos(theta) / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
+                float y = radius * sin(theta) / static_cast<float>(WINDOW_HEIGHT) * 10.0f;
+                // float y = (radius * sin(theta) / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
 
-                glEnd();
-                glFlush();
-            } else {
-                glBegin(GL_LINE_LOOP);  // Use GL_LINE_LOOP to draw the circle as an outline
-
-                glColor3f(color.r, color.g, color.b);
-
-                float corrected_radius = (2.0f * this->radius) / static_cast<float>(WINDOW_WIDTH);
-
-                for (int i = 0; i < numSegments; i++) {
-                    float theta = 2.0f * M_PI * static_cast<float>(i) / static_cast<float>(numSegments);
-                    float x = corrected_radius * cos(theta);
-                    float y = corrected_radius * sin(theta);
-
-                    glVertex2f(position.x + x, position.y + y);
-                }
-
-                glEnd();
-                glFlush();
+                glVertex2f(this->position.x + x, this->position.y + y);
             }
+
+            glEnd();
+            glFlush();
+        } else {
+            glBegin(GL_LINE_LOOP);  // Use GL_LINE_LOOP to draw the circle as an outline
+
+            glColor3f(color.r, color.g, color.b);
+
+            float corrected_radius = (2.0f * this->radius) / static_cast<float>(WINDOW_WIDTH);
+
+            for (int i = 0; i < numSegments; i++) {
+                float theta = 2.0f * M_PI * static_cast<float>(i) / static_cast<float>(numSegments);
+                float x = corrected_radius * cos(theta);
+                float y = corrected_radius * sin(theta);
+
+                glVertex2f(position.x + x, position.y + y);
+            }
+
+            glEnd();
+            glFlush();
         }
     }
 };
@@ -244,6 +249,52 @@ class Line2D : public Shape {
         for (size_t i = 0; i < points.size() - 1; ++i) {
             glVertex2f(points[i].x, points[i].y);
             glVertex2f(points[i + 1].x, points[i + 1].y);
+        }
+
+        glEnd();
+        glFlush();
+    }
+};
+
+class BezierCurve : public Shape {
+   public:
+    std::vector<Vec2> controlPoints;
+    int segments;
+
+    BezierCurve(std::vector<Vec2>& controlPoints, const Color& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
+        : Shape(Vec2{0.0f, 0.0f}, color), controlPoints(controlPoints) {
+        this->segments = controlPoints.size();
+        this->controlPoints = controlPoints;
+        if (point_type == PointType::Pixel) {
+            for (Vec2& cp : this->controlPoints) {
+                cp.x = (cp.x / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
+                cp.y = (cp.y / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
+            }
+        }
+    }
+
+    void draw() override {
+        if (!is_visible) {
+            return;
+        }
+
+        glBegin(GL_LINE_STRIP);
+        glColor3f(color.r, color.g, color.b);
+
+        if (segments >= 4) {
+            for (int i = 0; i <= segments; ++i) {
+                float t = static_cast<float>(i) / static_cast<float>(segments);
+                float u = 1.0f - t;
+                float coef0 = u * u * u;
+                float coef1 = 3.0f * u * u * t;
+                float coef2 = 3.0f * u * t * t;
+                float coef3 = t * t * t;
+
+                float x = coef0 * controlPoints[0].x + coef1 * controlPoints[1].x + coef2 * controlPoints[2].x + coef3 * controlPoints[3].x;
+                float y = coef0 * controlPoints[0].y + coef1 * controlPoints[1].y + coef2 * controlPoints[2].y + coef3 * controlPoints[3].y;
+
+                glVertex2f(x, y);
+            }
         }
 
         glEnd();

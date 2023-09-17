@@ -19,10 +19,6 @@ enum SystemType {
     FixedUpdate
 };
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
-    glViewport(0, 0, width, height);
-}
-
 class App {
    private:
     const char* window_title;
