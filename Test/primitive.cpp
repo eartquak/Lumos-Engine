@@ -4,23 +4,23 @@ int main() {
     App app = App(800, 600, "Testing Window");
 
     // Create a Box
-    Quad* box = new Quad(Vec2{0, 0}, 400, 400, Color{1.0f, 0.0f, 0.0f}, PointType::Pixel);
+    Quad* box = new Quad(glm::vec2{0, 0}, 400, 400, glm::vec3{1.0f, 0.0f, 0.0f}, PointType::Pixel);
 
     // Create a Point
-    Point* point = new Point(Vec2{0.0f, 0.0f}, Color{0.0f, 1.0f, 0.0f});
+    Point* point = new Point(glm::vec2{0.0f, 0.0f}, glm::vec3{0.0f, 1.0f, 0.0f});
 
     // Create a circle
-    Circle* circle = new Circle(Vec2{0.5f, 0.0f}, Color{0.0f, 0.0f, 1.0f}, 10.0f);
+    Circle* circle = new Circle(glm::vec2{0.5f, 0.0f}, glm::vec3{0.0f, 0.0f, 1.0f}, 10.0f);
 
-    std::vector<Vec2> points = {Vec2{0.0f, 0.0f}, Vec2{1.0f, 1.0f}};
-    Line2D* line = new Line2D(points, Color{1.0, 1.0, 1.0}, PointType::Fraction);
+    std::vector<glm::vec2> points = {glm::vec2{0.0f, 0.0f}, glm::vec2{1.0f, 1.0f}};
+    Line2D* line = new Line2D(points, glm::vec3{1.0, 1.0, 1.0}, PointType::Fraction);
 
-    std::vector<Vec2> controlPoints;
-    controlPoints.push_back(Vec2{100.0f, 100.0f});  // First control point
-    controlPoints.push_back(Vec2{200.0f, 300.0f});  // Second control point
-    controlPoints.push_back(Vec2{300.0f, 100.0f});  // Third control point
+    std::vector<glm::vec2> controlPoints;
+    controlPoints.push_back(glm::vec2{100.0f, 100.0f});  // First control point
+    controlPoints.push_back(glm::vec2{200.0f, 300.0f});  // Second control point
+    controlPoints.push_back(glm::vec2{300.0f, 100.0f});  // Third control point
 
-    Triangle* tri = new Triangle(Vec2{100.0f, 100.0f}, Vec2{200.0f, 300.0f},Vec2{300.0f, 100.0f} , Color{1.0f, 1.0f, 1.0f}, PointType::Pixel);
+    Triangle* tri = new Triangle(glm::vec2{100.0f, 100.0f}, glm::vec2{200.0f, 300.0f},glm::vec2{300.0f, 100.0f} , glm::vec3{1.0f, 1.0f, 1.0f}, PointType::Pixel);
 
     app.add_system(SystemType::Update, [&box]() {
            box->draw();

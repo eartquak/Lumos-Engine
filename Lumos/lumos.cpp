@@ -1,13 +1,10 @@
 #pragma once
 #include <GL/glew.h>
-// #include "glew-2.1.0/include/GL/glew.h"
 #include <GLFW/glfw3.h>
-// #include "glfw-3.3.8/include/GLFW/glfw3.h"
 #include <functional>
 #include <iostream>
 #include <vector>
 
-#include "math.cpp"
 #include "shapes.cpp"
 #include "data.cpp"
 int WINDOW_HEIGHT;

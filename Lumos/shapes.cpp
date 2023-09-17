@@ -2,9 +2,9 @@
 // #include "freeglut-3.4.0/include/GL/glut.h"
 #include <cmath>
 #include <iostream>
+#include <glm/glm.hpp>
 
 #include "data.cpp"
-#include "math.cpp"
 
 enum PointType {
     Fraction,
@@ -13,11 +13,11 @@ enum PointType {
 
 class Shape {
    public:
-    Vec2 position;
-    Color color;
+    glm::vec2 position;
+    glm::vec3 color;
     bool is_visible;
 
-    Shape(const Vec2& position, const Color& color = {1.0, 1.0, 1.0}, bool is_visible = true)
+    Shape(const glm::vec2& position, const glm::vec3& color = {1.0, 1.0, 1.0}, bool is_visible = true)
         : position(position), color(color), is_visible(is_visible) {}
 
     virtual void draw() = 0;
@@ -55,17 +55,17 @@ class Quad : public Shape {
                 this->width = max_x - min_x;
                 this->height = max_y - min_y;
 
-                this->position = Vec2{min_x, min_y};
+                this->position = glm::vec2{min_x, min_y};
                 break;
             }
             default:
                 break;
         }
 
-        this->color = Color{color[0], color[1], color[2]};
+        this->color = glm::vec3{color[0], color[1], color[2]};
     }
 
-    Quad(const Vec2& position, float height, float width, const Color& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
+    Quad(const glm::vec2& position, float height, float width, const glm::vec3& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
         : Shape(position, color) {
         switch (point_type) {
             case PointType::Pixel: {
@@ -108,7 +108,7 @@ class Point : public Shape {
    public:
     float size;
 
-    Point(const Vec2& position, const Color& color = {1.0, 1.0, 1.0}, float size = 10.0f, PointType point_type = PointType::Fraction)
+    Point(const glm::vec2& position, const glm::vec3& color = {1.0, 1.0, 1.0}, float size = 10.0f, PointType point_type = PointType::Fraction)
         : Shape(position, color) {
         switch (point_type) {
             case PointType::Pixel: {
@@ -146,7 +146,7 @@ class Circle : public Shape {
     float radius;
     bool shaded;
 
-    Circle(const Vec2& position, const Color& color = {1.0, 1.0, 1.0}, float radius = 1.0f, bool shaded = true, PointType point_type = PointType::Fraction)
+    Circle(const glm::vec2& position, const glm::vec3& color = {1.0, 1.0, 1.0}, float radius = 1.0f, bool shaded = true, PointType point_type = PointType::Fraction)
         : Shape(position, color), radius(radius), shaded(shaded) {
         switch (point_type) {
             case PointType::Pixel: {
@@ -221,13 +221,13 @@ class Circle : public Shape {
 
 class Line2D : public Shape {
    public:
-    std::vector<Vec2> points;
+    std::vector<glm::vec2> points;
 
-    Line2D(std::vector<Vec2>& points, const Color& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
-        : Shape(Vec2{0.0f, 0.0f}, color), points(points) {
+    Line2D(std::vector<glm::vec2>& points, const glm::vec3& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
+        : Shape(glm::vec2{0.0f, 0.0f}, color), points(points) {
         switch (point_type) {
             case PointType::Pixel: {
-                for (Vec2& point : points) {
+                for (glm::vec2& point : points) {
                     point.x = (point.x / static_cast<float>(WINDOW_WIDTH)) * 2.0f - 1.0f;
                     point.y = (point.y / static_cast<float>(WINDOW_HEIGHT)) * 2.0f - 1.0f;
                 }
@@ -258,10 +258,10 @@ class Line2D : public Shape {
 
 class Triangle : public Shape {
 public:
-    Vec2 p1, p2, p3;
+    glm::vec2 p1, p2, p3;
 
-    Triangle(const Vec2& point1, const Vec2& point2, const Vec2& point3, const Color& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
-        : Shape(Vec2{0.0f, 0.0f}, color) {
+    Triangle(const glm::vec2& point1, const glm::vec2& point2, const glm::vec2& point3, const glm::vec3& color = {1.0, 1.0, 1.0}, PointType point_type = PointType::Fraction)
+        : Shape(glm::vec2{0.0f, 0.0f}, color) {
         p1 = point1;
         p2 = point2;
         p3 = point3;
