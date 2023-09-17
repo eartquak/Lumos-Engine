@@ -25,6 +25,7 @@ class App {
     GLFWwindow* window;
     std::vector<std::function<void()>> startup_functions;
     std::vector<std::function<void()>> update_functions;
+    bool resizable;
 
     void create_window() {
         // Initialize GLFW
@@ -37,6 +38,8 @@ class App {
         // Create a GLFW window
         GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, this->window_title, nullptr, nullptr);
         this->window = window;
+
+        glfwSetWindowAttrib(window, GLFW_RESIZABLE, this->resizable);
 
         if (!window) {
             std::cerr << "Failed to create GLFW window" << std::endl;
@@ -59,10 +62,11 @@ class App {
     }
 
    public:
-    App(int window_width, int window_height, const char* window_title) {
+    App(int window_width, int window_height, const char* window_title, bool resizable = false) {
         WINDOW_WIDTH = window_width;
         WINDOW_HEIGHT = window_height;
         this->window_title = window_title;
+        this->resizable = resizable;
     }
 
     ~App() {
