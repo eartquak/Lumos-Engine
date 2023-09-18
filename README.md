@@ -16,9 +16,6 @@ A 2-D game engine written in C++.
 1. The engine code is present in `Lumos` directory
 2. Testing out feature can be done by making another file in `Test` folder (change the target in `meson.build`)
 
-# Tips
-1. To execute in release mode use `meson build --buildtype release`
-
 # How to use spdlog
 ```cpp
 #include "spdlog/spdlog.h"
