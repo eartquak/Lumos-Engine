@@ -33,12 +33,12 @@ class App {
 
     void create_window() {
         if (this->headless) {
-            spdlog::info("Creating headless window");
+            spdlog::debug("Creating headless window");
             this->window = nullptr;
             return;
         }
 
-        spdlog::info("Creating window");
+        spdlog::debug("Creating window");
 
         // Initialize GLFW
         if (!glfwInit()) {
@@ -68,6 +68,7 @@ class App {
 
    public:
     App(int window_width, int window_height, const char* window_title, bool resizable = false, bool debug = true) {
+        spdlog::info("Starting Lumos Engine 🌕");
         if (debug) {
             spdlog::set_level(spdlog::level::debug);
         }
@@ -79,6 +80,7 @@ class App {
 
     // Opens app in headless mode
     App(bool debug = true) {
+        spdlog::info("Starting Lumos Engine 🌕");
         if (debug) {
             spdlog::set_level(spdlog::level::debug);
         }
@@ -86,7 +88,7 @@ class App {
     }
 
     ~App() {
-        spdlog::info("Exiting the application...");
+        spdlog::info("Closing Lumos Engine 🌑");
     }
 
     App& add_system(SystemType type, std::function<void()> function) {
@@ -114,19 +116,19 @@ class App {
     }
 
     void run() {
-        spdlog::info("Running the application...");
-
         this->create_window();
 
         if (!this->headless) {
             glClear(GL_COLOR_BUFFER_BIT);
         }
 
+        spdlog::debug("Running the startup functions");
         // Functions run in the beginning
         for (const std::function<void()>& function : startup_functions) {
             function();
         }
 
+        spdlog::debug("Running the fixed update functions");
         // Fixed update functions
         for (const std::pair<std::function<void()>, int>& function_pair : fixed_update_functions) {
             const std::function<void()>& function = function_pair.first;
@@ -141,10 +143,12 @@ class App {
             });
         }
 
+        spdlog::debug("Running the main loop (contains update function loop)");
         if (!this->headless) {
             // Main loop
             while (!glfwWindowShouldClose(this->window)) {
                 glClear(GL_COLOR_BUFFER_BIT);
+
                 // Update Functions (update every frame i.e every loop)
                 for (std::function<void()>& function : update_functions) {
                     function();
@@ -158,6 +162,7 @@ class App {
             }
         }
 
+        spdlog::debug("Terminating the fixed update functions");
         // Set the termination flag for fixed update threads
         for (auto& thread : fixed_update_threads) {
             if (thread.joinable()) {
