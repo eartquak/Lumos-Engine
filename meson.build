@@ -11,5 +11,5 @@ glewDep = dependency('glew')
 glfwDep = dependency('glfw3')
 
 # Define your executable and sources
-executable('debug', 'Test/checkerboard.cpp', dependencies : [glfwDep, glewDep, openGLDep])
+executable('debug', 'Examples/checkerboard.cpp', dependencies : [glfwDep, glewDep, openGLDep])
 

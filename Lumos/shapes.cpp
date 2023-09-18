@@ -91,8 +91,6 @@ class Quad : public Shape {
             return;
         }
 
-        std::cout << this->width << ", " << this->height << std::endl;
-
         glBegin(GL_QUADS);
         glColor3f(color.r, color.g, color.b);  // Set the color
         glVertex2f(position.x, position.y);
