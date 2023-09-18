@@ -3,11 +3,11 @@
 #include "../Lumos/lumos.cpp"
 
 void hello_world() {
-    spdlog::info("Hello World");
+    spdlog::debug("Hello World");
 }
 
 void bye_world() {
-    spdlog::info("Bye World");
+    spdlog::debug("Bye World");
 }
 
 int main() {

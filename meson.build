@@ -9,4 +9,4 @@ glewDep = dependency('glew')
 glfwDep = dependency('glfw3')
 spdlogDep = dependency('spdlog')
 
-executable('debug', 'Examples/checkerboard.cpp', dependencies: [glfwDep, glewDep, openGLDep, spdlogDep])
+executable('debug', 'Examples/fixed_update.cpp', dependencies: [glfwDep, glewDep, openGLDep, spdlogDep])

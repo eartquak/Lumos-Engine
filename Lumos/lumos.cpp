@@ -114,7 +114,7 @@ class App {
     }
 
     void run() {
-        spdlog::debug("Running the application...");
+        spdlog::info("Running the application...");
 
         this->create_window();
 
