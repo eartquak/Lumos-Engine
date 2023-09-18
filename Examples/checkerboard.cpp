@@ -4,7 +4,7 @@
 #include "../Lumos/lumos.cpp"
 
 int main() {
-    App app = App(800, 800, "Testing Window");
+    App app = App(800, 800, "Testing Window", false, false);
     int pixel_size = 100;
 
     for (int i = 0; i <= 8; i++) {

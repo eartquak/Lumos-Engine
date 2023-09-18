@@ -1,6 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <spdlog/spdlog.h>
 
 #include <functional>
 #include <iostream>
@@ -9,6 +10,7 @@
 
 #include "data.cpp"
 #include "shapes.cpp"
+
 int WINDOW_HEIGHT;
 int WINDOW_WIDTH;
 
@@ -30,24 +32,25 @@ class App {
     bool headless = false;
 
     void create_window() {
-        // Initialize GLFW
-        if (!glfwInit()) {
-            std::cerr << "Failed to initialize GLFW" << std::endl;
-            // Handle initialization failure
-            // return -1;
+        if (this->headless) {
+            spdlog::info("Creating headless window");
+            this->window = nullptr;
+            return;
         }
 
-        // Create a GLFW window
+        spdlog::info("Creating window");
+
+        // Initialize GLFW
+        if (!glfwInit()) {
+            spdlog::error("Failed to initialize GLFW");
+        }
+
         GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, this->window_title, nullptr, nullptr);
         this->window = window;
-
         glfwSetWindowAttrib(window, GLFW_RESIZABLE, this->resizable);
 
         if (!window) {
-            std::cerr << "Failed to create GLFW window" << std::endl;
-            glfwTerminate();
-            // Handle window creation failure
-            // return -1;
+            spdlog::error("Failed to create GLFW window");
         }
 
         // Make the OpenGL context current
@@ -64,53 +67,60 @@ class App {
     }
 
    public:
-    App(int window_width, int window_height, const char* window_title, bool resizable = false) {
+    App(int window_width, int window_height, const char* window_title, bool resizable = false, bool debug = true) {
+        if (debug) {
+            spdlog::set_level(spdlog::level::debug);
+        }
         WINDOW_WIDTH = window_width;
         WINDOW_HEIGHT = window_height;
         this->window_title = window_title;
         this->resizable = resizable;
     }
 
-    // Two constructors as if you're making a window, why would you define dimensios 🧐
-    App(bool headless = false) {
-        this->headless = headless;
+    // Opens app in headless mode
+    App(bool debug = true) {
+        if (debug) {
+            spdlog::set_level(spdlog::level::debug);
+        }
+        this->headless = true;
     }
 
     ~App() {
-        std::cout << "Exiting the application..." << std::endl;
+        spdlog::info("Exiting the application...");
     }
 
     App& add_system(SystemType type, std::function<void()> function) {
+        std::string system_type;
         switch (type) {
             case SystemType::Startup:
                 this->startup_functions.push_back(function);
+                system_type = "Startup";
                 break;
             case SystemType::Update:
                 this->update_functions.push_back(function);
+                system_type = "Update";
                 break;
             default:
                 break;
         }
+        spdlog::debug("Adding system of type {}", system_type);
         return *this;
     }
 
-    // todo : check when seconds is not given does it execute the upper function, not that it matters
-    App& add_system(SystemType type, std::function<void()> function, int seconds = 0) {
-        switch (type) {
-            case SystemType::FixedUpdate:
-                this->fixed_update_functions.push_back({function, seconds});
-                break;
-            default:
-                break;
-        }
+    App& add_fixed_update(std::function<void()> function, int seconds = 0) {
+        spdlog::debug("Adding system of type FixedUpdate");
+        this->fixed_update_functions.push_back({function, seconds});
         return *this;
     }
 
     void run() {
-        std::cout << "Running the application..." << std::endl;
+        spdlog::debug("Running the application...");
 
         this->create_window();
-        glClear(GL_COLOR_BUFFER_BIT);
+
+        if (!this->headless) {
+            glClear(GL_COLOR_BUFFER_BIT);
+        }
 
         // Functions run in the beginning
         for (const std::function<void()>& function : startup_functions) {
@@ -131,19 +141,21 @@ class App {
             });
         }
 
-        // Main loop
-        while (!glfwWindowShouldClose(this->window)) {
-            glClear(GL_COLOR_BUFFER_BIT);
-            // Update Functions (update every frame i.e every loop)
-            for (std::function<void()>& function : update_functions) {
-                function();
+        if (!this->headless) {
+            // Main loop
+            while (!glfwWindowShouldClose(this->window)) {
+                glClear(GL_COLOR_BUFFER_BIT);
+                // Update Functions (update every frame i.e every loop)
+                for (std::function<void()>& function : update_functions) {
+                    function();
+                }
+
+                // Swap front and back buffers
+                glfwSwapBuffers(this->window);
+
+                // Poll for and process events
+                glfwPollEvents();
             }
-
-            // Swap front and back buffers
-            glfwSwapBuffers(this->window);
-
-            // Poll for and process events
-            glfwPollEvents();
         }
 
         // Set the termination flag for fixed update threads

@@ -3,16 +3,16 @@
 #include "../Lumos/lumos.cpp"
 
 void hello_world() {
-    std::cout << "Hello World" << std::endl;
+    spdlog::info("Hello World");
 }
 
 void bye_world() {
-    std::cout << "Bye World" << std::endl;
+    spdlog::info("Bye World");
 }
 
 int main() {
-    App app = App(500, 500, "Testing Window");
-    app.add_system(SystemType::FixedUpdate, hello_world, 1)
-        .add_system(SystemType::FixedUpdate, bye_world, 2)
+    App app = App();
+    app.add_fixed_update(hello_world, 1)
+        .add_fixed_update(bye_world, 2)
         .run();
 }
