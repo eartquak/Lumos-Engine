@@ -109,9 +109,18 @@ class App {
         return *this;
     }
 
-    App& add_fixed_update(std::function<void()> function, int seconds = 0) {
-        spdlog::debug("Adding system of type FixedUpdate");
-        this->fixed_update_functions.push_back({function, seconds});
+    App& add_system(SystemType type, std::function<void()> function, int seconds) {
+        std::string system_type;
+
+        switch (type) {
+            case SystemType::FixedUpdate:
+                this->fixed_update_functions.push_back({function, seconds});
+                system_type = "FixedUpdate";
+                break;
+            default:
+                break;
+        }
+        spdlog::debug("Adding system of type {}", system_type);
         return *this;
     }
 
