@@ -9,4 +9,4 @@ glewDep = dependency('glew')
 glfwDep = dependency('glfw3')
 spdlogDep = dependency('spdlog')
 
-executable('debug', 'Examples/primitive.cpp', dependencies: [glfwDep, glewDep, openGLDep, spdlogDep])
+executable('debug', 'Examples/moving_rect.cpp', dependencies: [glfwDep, glewDep, openGLDep, spdlogDep])
