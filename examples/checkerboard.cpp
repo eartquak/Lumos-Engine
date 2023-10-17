@@ -1,7 +1,7 @@
 #include <cmath>
 #include <vector>
 
-#include "../Lumos/lumos.cpp"
+#include "lumos.h"
 
 int main() {
     App app = App(800, 800, "Testing Window", false, true);
