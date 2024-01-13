@@ -1,0 +1,57 @@
+\hypertarget{lumos_8h}{}\doxysection{include/lumos.h File Reference}
+\label{lumos_8h}\index{include/lumos.h@{include/lumos.h}}
+
+
+Defines the main Lumos application class (\mbox{\hyperlink{classApp}{App}}) responsible for window management, system updates, and running the main loop.  
+
+
+{\ttfamily \#include $<$spdlog/spdlog.\+h$>$}\newline
+{\ttfamily \#include $<$functional$>$}\newline
+{\ttfamily \#include $<$iostream$>$}\newline
+{\ttfamily \#include $<$thread$>$}\newline
+{\ttfamily \#include $<$vector$>$}\newline
+{\ttfamily \#include \char`\"{}data.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}shapes.\+h\char`\"{}}\newline
+Include dependency graph for lumos.\+h\+:
+% FIG 0
+\doxysubsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \mbox{\hyperlink{classApp}{App}}
+\begin{DoxyCompactList}\small\item\em Main class representing the Lumos application. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \mbox{\hyperlink{lumos_8h_a922f019f64e4183a18638787f6ba539b}{System\+Type}} \{ \mbox{\hyperlink{lumos_8h_a922f019f64e4183a18638787f6ba539ba81b6a630ce374e3388c5d5509e889b59}{Startup}}
+, \mbox{\hyperlink{lumos_8h_a922f019f64e4183a18638787f6ba539baa2e17ac958eecaffea2602509aa84592}{Update}}
+, \mbox{\hyperlink{lumos_8h_a922f019f64e4183a18638787f6ba539ba669f33a715c8ae24a1c5ec30c4a12091}{Fixed\+Update}}
+ \}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Defines the main Lumos application class (\mbox{\hyperlink{classApp}{App}}) responsible for window management, system updates, and running the main loop. 
+
+
+
+\doxysubsection{Enumeration Type Documentation}
+\mbox{\Hypertarget{lumos_8h_a922f019f64e4183a18638787f6ba539b}\label{lumos_8h_a922f019f64e4183a18638787f6ba539b}} 
+\index{lumos.h@{lumos.h}!SystemType@{SystemType}}
+\index{SystemType@{SystemType}!lumos.h@{lumos.h}}
+\doxysubsubsection{\texorpdfstring{SystemType}{SystemType}}
+{\footnotesize\ttfamily enum \mbox{\hyperlink{lumos_8h_a922f019f64e4183a18638787f6ba539b}{System\+Type}}}
+
+Enumerates the types of systems that can be added by the application. \begin{DoxyEnumFields}{Enumerator}
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Startup@{Startup}!lumos.h@{lumos.h}}\index{lumos.h@{lumos.h}!Startup@{Startup}}}\mbox{\Hypertarget{lumos_8h_a922f019f64e4183a18638787f6ba539ba81b6a630ce374e3388c5d5509e889b59}\label{lumos_8h_a922f019f64e4183a18638787f6ba539ba81b6a630ce374e3388c5d5509e889b59}} 
+Startup&Startup system executed once at the beginning. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{Update@{Update}!lumos.h@{lumos.h}}\index{lumos.h@{lumos.h}!Update@{Update}}}\mbox{\Hypertarget{lumos_8h_a922f019f64e4183a18638787f6ba539baa2e17ac958eecaffea2602509aa84592}\label{lumos_8h_a922f019f64e4183a18638787f6ba539baa2e17ac958eecaffea2602509aa84592}} 
+Update&Update system executed every frame. \\
+\hline
+
+\raisebox{\heightof{T}}[0pt][0pt]{\index{FixedUpdate@{FixedUpdate}!lumos.h@{lumos.h}}\index{lumos.h@{lumos.h}!FixedUpdate@{FixedUpdate}}}\mbox{\Hypertarget{lumos_8h_a922f019f64e4183a18638787f6ba539ba669f33a715c8ae24a1c5ec30c4a12091}\label{lumos_8h_a922f019f64e4183a18638787f6ba539ba669f33a715c8ae24a1c5ec30c4a12091}} 
+Fixed\+Update&Fixed\+Update system executed at fixed intervals. \\
+\hline
+
+\end{DoxyEnumFields}

@@ -1,0 +1,66 @@
+\hypertarget{classPoint}{}\doxysection{Point Class Reference}
+\label{classPoint}\index{Point@{Point}}
+
+
+Class representing a 2D point in the Lumos engine.  
+
+
+
+
+{\ttfamily \#include $<$shapes.\+h$>$}
+
+
+
+Inheritance diagram for Point\+:
+% FIG 0
+
+
+Collaboration diagram for Point\+:
+% FIG 1
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classPoint_ab700b68858bee3c46775798212ea931e}{Point}} (const glm\+::vec2 \&\mbox{\hyperlink{classShape_a33573471852f3f7c59753ab88cf925d7}{position}}, const glm\+::vec3 \&\mbox{\hyperlink{classShape_a5446b7cade82cde8cf56d9d4c469ba20}{color}}=\{1.\+0, 1.\+0, 1.\+0\}, float \mbox{\hyperlink{classPoint_adbf20011763d3d26679f7e555c6f8c79}{size}}=10.\+0f, \mbox{\hyperlink{shapes_8h_a18ab7b7b419342201c07425bdcd420cd}{Point\+Type}} point\+\_\+type=\mbox{\hyperlink{shapes_8h_a18ab7b7b419342201c07425bdcd420cda6fa22a9f53a4a21a442050658908ea02}{Point\+Type\+::\+Fraction}})
+\begin{DoxyCompactList}\small\item\em Constructor for the \mbox{\hyperlink{classPoint}{Point}} class. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classPoint_a073a3972ba583b371134e0040423c334}\label{classPoint_a073a3972ba583b371134e0040423c334}} 
+void \mbox{\hyperlink{classPoint_a073a3972ba583b371134e0040423c334}{draw}} () override
+\begin{DoxyCompactList}\small\item\em Method to draw the point. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classPoint_adbf20011763d3d26679f7e555c6f8c79}\label{classPoint_adbf20011763d3d26679f7e555c6f8c79}} 
+float \mbox{\hyperlink{classPoint_adbf20011763d3d26679f7e555c6f8c79}{size}}
+\begin{DoxyCompactList}\small\item\em Size of the point. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class representing a 2D point in the Lumos engine. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classPoint_ab700b68858bee3c46775798212ea931e}\label{classPoint_ab700b68858bee3c46775798212ea931e}} 
+\index{Point@{Point}!Point@{Point}}
+\index{Point@{Point}!Point@{Point}}
+\doxysubsubsection{\texorpdfstring{Point()}{Point()}}
+{\footnotesize\ttfamily Point\+::\+Point (\begin{DoxyParamCaption}\item[{const glm\+::vec2 \&}]{position,  }\item[{const glm\+::vec3 \&}]{color = {\ttfamily \{1.0,~1.0,~1.0\}},  }\item[{float}]{size = {\ttfamily 10.0f},  }\item[{\mbox{\hyperlink{shapes_8h_a18ab7b7b419342201c07425bdcd420cd}{Point\+Type}}}]{point\+\_\+type = {\ttfamily \mbox{\hyperlink{shapes_8h_a18ab7b7b419342201c07425bdcd420cda6fa22a9f53a4a21a442050658908ea02}{Point\+Type\+::\+Fraction}}} }\end{DoxyParamCaption})}
+
+
+
+Constructor for the \mbox{\hyperlink{classPoint}{Point}} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em position} & Position of the point. \\
+\hline
+{\em color} & Color of the point. \\
+\hline
+{\em size} & Size of the point (default is 10.\+0f). \\
+\hline
+{\em point\+\_\+type} & Type of coordinates (Fraction or Pixel). \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{shapes_8h}{shapes.\+h}}\item 
+src/shapes.\+cpp\end{DoxyCompactItemize}

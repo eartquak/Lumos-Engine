@@ -1,0 +1,134 @@
+\hypertarget{classApp}{}\doxysection{App Class Reference}
+\label{classApp}\index{App@{App}}
+
+
+Main class representing the Lumos application.  
+
+
+
+
+{\ttfamily \#include $<$lumos.\+h$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classApp_a8153c0bbcf6655676523f26640fed0ea}{App}} (int window\+\_\+width, int window\+\_\+height, const char $\ast$window\+\_\+title, bool resizable=false, bool debug=true)
+\begin{DoxyCompactList}\small\item\em Constructor for the \mbox{\hyperlink{classApp}{App}} class. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classApp_a59ed66f751608261b8a63ef909133df5}{App}} (bool debug=true)
+\begin{DoxyCompactList}\small\item\em Constructor for headless mode of the \mbox{\hyperlink{classApp}{App}} class. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classApp_a34f1f253b1cef5f4ecbac66eaf6964ec}\label{classApp_a34f1f253b1cef5f4ecbac66eaf6964ec}} 
+\mbox{\hyperlink{classApp_a34f1f253b1cef5f4ecbac66eaf6964ec}{$\sim$\+App}} ()
+\begin{DoxyCompactList}\small\item\em Destructor for the \mbox{\hyperlink{classApp}{App}} class. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classApp}{App}} \& \mbox{\hyperlink{classApp_a45734fa394d5ff0b961dcef6481049d1}{add\+\_\+system}} (\mbox{\hyperlink{lumos_8h_a922f019f64e4183a18638787f6ba539b}{System\+Type}} type, std\+::function$<$ void()$>$ function)
+\begin{DoxyCompactList}\small\item\em Adds a system to the Lumos application. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classApp}{App}} \& \mbox{\hyperlink{classApp_a72e461eaba03a9b4e1992e6f7320309f}{add\+\_\+system}} (\mbox{\hyperlink{lumos_8h_a922f019f64e4183a18638787f6ba539b}{System\+Type}} type, std\+::function$<$ void()$>$ function, int seconds)
+\begin{DoxyCompactList}\small\item\em Adds a fixed update system to the Lumos application with a specified interval. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classApp_ae09dc71078b64c56c673b1ad1d25b5d1}{run}} ()
+\begin{DoxyCompactList}\small\item\em Runs the Lumos application. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Main class representing the Lumos application. 
+
+The \mbox{\hyperlink{classApp}{App}} class manages the main loop, window creation, and system updates in the Lumos application. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classApp_a8153c0bbcf6655676523f26640fed0ea}\label{classApp_a8153c0bbcf6655676523f26640fed0ea}} 
+\index{App@{App}!App@{App}}
+\index{App@{App}!App@{App}}
+\doxysubsubsection{\texorpdfstring{App()}{App()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily App\+::\+App (\begin{DoxyParamCaption}\item[{int}]{window\+\_\+width,  }\item[{int}]{window\+\_\+height,  }\item[{const char $\ast$}]{window\+\_\+title,  }\item[{bool}]{resizable = {\ttfamily false},  }\item[{bool}]{debug = {\ttfamily true} }\end{DoxyParamCaption})}
+
+
+
+Constructor for the \mbox{\hyperlink{classApp}{App}} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em window\+\_\+width} & Width of the application window. \\
+\hline
+{\em window\+\_\+height} & Height of the application window. \\
+\hline
+{\em window\+\_\+title} & Title of the application window. \\
+\hline
+{\em resizable} & Flag indicating if the window is resizable (default is false). \\
+\hline
+{\em debug} & Flag indicating if the application is in debug mode (default is true). \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classApp_a59ed66f751608261b8a63ef909133df5}\label{classApp_a59ed66f751608261b8a63ef909133df5}} 
+\index{App@{App}!App@{App}}
+\index{App@{App}!App@{App}}
+\doxysubsubsection{\texorpdfstring{App()}{App()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily App\+::\+App (\begin{DoxyParamCaption}\item[{bool}]{debug = {\ttfamily true} }\end{DoxyParamCaption})}
+
+
+
+Constructor for headless mode of the \mbox{\hyperlink{classApp}{App}} class. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em debug} & Flag indicating if the application is in debug mode (default is true). \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classApp_a45734fa394d5ff0b961dcef6481049d1}\label{classApp_a45734fa394d5ff0b961dcef6481049d1}} 
+\index{App@{App}!add\_system@{add\_system}}
+\index{add\_system@{add\_system}!App@{App}}
+\doxysubsubsection{\texorpdfstring{add\_system()}{add\_system()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classApp}{App}} \& App\+::add\+\_\+system (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{lumos_8h_a922f019f64e4183a18638787f6ba539b}{System\+Type}}}]{type,  }\item[{std\+::function$<$ void()$>$}]{function }\end{DoxyParamCaption})}
+
+
+
+Adds a system to the Lumos application. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & Type of the system (Startup, Update, or Fixed\+Update). \\
+\hline
+{\em function} & Function representing the system. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reference to the current \mbox{\hyperlink{classApp}{App}} instance for method chaining. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classApp_a72e461eaba03a9b4e1992e6f7320309f}\label{classApp_a72e461eaba03a9b4e1992e6f7320309f}} 
+\index{App@{App}!add\_system@{add\_system}}
+\index{add\_system@{add\_system}!App@{App}}
+\doxysubsubsection{\texorpdfstring{add\_system()}{add\_system()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classApp}{App}} \& App\+::add\+\_\+system (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{lumos_8h_a922f019f64e4183a18638787f6ba539b}{System\+Type}}}]{type,  }\item[{std\+::function$<$ void()$>$}]{function,  }\item[{int}]{seconds }\end{DoxyParamCaption})}
+
+
+
+Adds a fixed update system to the Lumos application with a specified interval. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em type} & Type of the system (Fixed\+Update). \\
+\hline
+{\em function} & Function representing the system. \\
+\hline
+{\em seconds} & Interval at which the fixed update system should run. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Reference to the current \mbox{\hyperlink{classApp}{App}} instance for method chaining. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classApp_ae09dc71078b64c56c673b1ad1d25b5d1}\label{classApp_ae09dc71078b64c56c673b1ad1d25b5d1}} 
+\index{App@{App}!run@{run}}
+\index{run@{run}!App@{App}}
+\doxysubsubsection{\texorpdfstring{run()}{run()}}
+{\footnotesize\ttfamily void App\+::run (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Runs the Lumos application. 
+
+This method initializes the window, runs startup functions, fixed update functions, and enters the main loop for update functions until the application is closed. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\mbox{\hyperlink{lumos_8h}{lumos.\+h}}\item 
+src/lumos.\+cpp\end{DoxyCompactItemize}
