@@ -41,3 +41,6 @@ build/
 #Binaries and Intermediates folders
 Binaries/
 Intermediates/
+
+#docs
+docs/
