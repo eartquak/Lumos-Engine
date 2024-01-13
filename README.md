@@ -17,7 +17,7 @@ A 2-D game engine written in C++.
 2. Testing out feature can be done by making another file in `Test` folder (change the target in `meson.build`)
 
 # Documentation
-The documentation for this project can be found [here].(https://lambert-crypto.github.io/Lumos-Docs/)
+The documentation for this project can be found [here](https://lambert-crypto.github.io/Lumos-Docs/).
 
 # How to use spdlog
 ```cpp
