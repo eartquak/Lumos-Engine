@@ -1,0 +1,50 @@
+\label{index_md_README}%
+\Hypertarget{index_md_README}%
+A 2-\/D game engine written in C++.\hypertarget{index_autotoc_md1}{}\doxysection{How to run}\label{index_autotoc_md1}
+
+\begin{DoxyEnumerate}
+\item Run {\ttfamily meson setup build} to create the build directory
+\item Go to build directory with {\ttfamily cd build}
+\item Run {\ttfamily meson compile \&\& ./debug}
+\item To change target file change the same in {\ttfamily meson.\+build}
+\end{DoxyEnumerate}\hypertarget{index_autotoc_md2}{}\doxysection{Dependencies}\label{index_autotoc_md2}
+
+\begin{DoxyEnumerate}
+\item For GLFW and GLEW\+: {\ttfamily sudo apt-\/get install libglfw3-\/dev libglew-\/dev}
+\item For spdlog\+: {\ttfamily sudo apt-\/get install libspdlog-\/dev}
+\item glm version {\ttfamily 0.\+9.\+9.\+8} (pre installed as header library in {\ttfamily Lumos} directory)
+\end{DoxyEnumerate}\hypertarget{index_autotoc_md3}{}\doxysection{File structure}\label{index_autotoc_md3}
+
+\begin{DoxyEnumerate}
+\item The engine code is present in {\ttfamily Lumos} directory
+\item Testing out feature can be done by making another file in {\ttfamily Test} folder (change the target in {\ttfamily meson.\+build})
+\end{DoxyEnumerate}\hypertarget{index_autotoc_md4}{}\doxysection{How to use spdlog}\label{index_autotoc_md4}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{\textcolor{preprocessor}{\#include "{}spdlog/spdlog.h"{}}}
+\DoxyCodeLine{}
+\DoxyCodeLine{\textcolor{keywordtype}{int} main() }
+\DoxyCodeLine{\{}
+\DoxyCodeLine{    spdlog::info(\textcolor{stringliteral}{"{}Welcome to spdlog!"{}});}
+\DoxyCodeLine{    spdlog::error(\textcolor{stringliteral}{"{}Some error message with arg: \{\}"{}}, 1);}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    spdlog::warn(\textcolor{stringliteral}{"{}Easy padding in numbers like \{:08d\}"{}}, 12);}
+\DoxyCodeLine{    spdlog::critical(\textcolor{stringliteral}{"{}Support for int: \{0:d\};  hex: \{0:x\};  oct: \{0:o\}; bin: \{0:b\}"{}}, 42);}
+\DoxyCodeLine{    spdlog::info(\textcolor{stringliteral}{"{}Support for floats \{:03.2f\}"{}}, 1.23456);}
+\DoxyCodeLine{    spdlog::info(\textcolor{stringliteral}{"{}Positional args are \{1\} \{0\}.."{}}, \textcolor{stringliteral}{"{}too"{}}, \textcolor{stringliteral}{"{}supported"{}});}
+\DoxyCodeLine{    spdlog::info(\textcolor{stringliteral}{"{}\{:<30\}"{}}, \textcolor{stringliteral}{"{}left aligned"{}});}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    spdlog::set\_level(spdlog::level::debug); \textcolor{comment}{// Set global log level to debug}}
+\DoxyCodeLine{    spdlog::debug(\textcolor{stringliteral}{"{}This message should be displayed.."{}});    }
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{comment}{// change log pattern}}
+\DoxyCodeLine{    spdlog::set\_pattern(\textcolor{stringliteral}{"{}[\%H:\%M:\%S \%z] [\%n] [\%\string^-\/-\/-\/\%L-\/-\/-\/\%\$] [thread \%t] \%v"{}});}
+\DoxyCodeLine{    }
+\DoxyCodeLine{    \textcolor{comment}{// Compile time log levels}}
+\DoxyCodeLine{    \textcolor{comment}{// define SPDLOG\_ACTIVE\_LEVEL to desired level}}
+\DoxyCodeLine{    SPDLOG\_TRACE(\textcolor{stringliteral}{"{}Some trace message with param \{\}"{}}, 42);}
+\DoxyCodeLine{    SPDLOG\_DEBUG(\textcolor{stringliteral}{"{}Some debug message"{}});}
+\DoxyCodeLine{\}}
+
+\end{DoxyCode}
+ 
