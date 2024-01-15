@@ -81,12 +81,12 @@ App& App::add_system(SystemType type, std::function<void()> function) {
     return *this;
 }
 
-App& App::add_system(SystemType type, std::function<void()> function, int seconds) {
+App& App::add_system(SystemType type, std::function<void()> function, int milliseconds) {
     std::string system_type;
 
     switch (type) {
         case SystemType::FixedUpdate:
-            this->fixed_update_functions.push_back({function, seconds});
+            this->fixed_update_functions.push_back({function, milliseconds});
             system_type = "FixedUpdate";
             break;
         default:
@@ -113,13 +113,13 @@ void App::run() {
     // Fixed update functions
     for (const std::pair<std::function<void()>, int>& function_pair : fixed_update_functions) {
         const std::function<void()>& function = function_pair.first;
-        int seconds = function_pair.second;
+        int milliseconds = function_pair.second;
 
         // Create and start a thread for the fixed update function
-        fixed_update_threads.emplace_back([function, seconds]() {
+        fixed_update_threads.emplace_back([function, milliseconds]() {
             while (true) {
                 function();
-                std::this_thread::sleep_for(std::chrono::seconds(seconds));
+                std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
             }
         });
     }

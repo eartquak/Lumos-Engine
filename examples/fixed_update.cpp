@@ -12,7 +12,7 @@ void bye_world() {
 
 int main() {
     App app = App();
-    app.add_system(SystemType::FixedUpdate, hello_world, 1)
-        .add_system(SystemType::FixedUpdate, bye_world, 2)
+    app.add_system(SystemType::FixedUpdate, hello_world, 100)
+        .add_system(SystemType::FixedUpdate, bye_world, 200)
         .run();
 }

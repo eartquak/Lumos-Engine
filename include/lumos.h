@@ -84,7 +84,7 @@ public:
      * @param seconds Interval at which the fixed update system should run.
      * @return Reference to the current App instance for method chaining.
      */
-    App& add_system(SystemType type, std::function<void()> function, int seconds);
+    App& add_system(SystemType type, std::function<void()> function, int milliseconds);
 
     /**
      * @brief Runs the Lumos application.
