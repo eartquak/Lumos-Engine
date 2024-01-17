@@ -33,7 +33,7 @@ Texture::Texture(const char* path, GLenum format, GLenum pixelType, rect rect, G
 
     load(slot);
 
-    struct vertTex vertices[4];
+    /*struct vertTex vertices[4];
 
     vertices[0].position = {rect.pos.x, rect.pos.y, 0.0f};
     vertices[1].position = {rect.pos.x + rect.dim.x, rect.pos.y, 0.0f};
@@ -55,7 +55,7 @@ Texture::Texture(const char* path, GLenum format, GLenum pixelType, rect rect, G
 
     for(int i = 0; i < 4; i++) {
         vertices[i].scale = 0.5f;
-    }
+    }*/
 
     GLuint indices[] =
     {
@@ -63,7 +63,8 @@ Texture::Texture(const char* path, GLenum format, GLenum pixelType, rect rect, G
         0, 3, 2, // Lower triangle
     };
 
-    vbo.addData((float*)vertices, sizeof(vertices));
+    vbo.addData(nullptr, 4 * sizeof(vertTex));
+    updateRect(rect);
 
     ebo.addData(indices, sizeof(indices));
 
@@ -101,6 +102,34 @@ void Texture::draw() {
 
 void Texture::initShader() {
     shader = new Shader("./assets/shaders/vert.glsl", "./assets/shaders/frag.glsl");
+}
+
+void Texture::updateRect(rect rect) {
+
+    struct vertTex vertices[4];
+
+    vertices[0].position = {rect.pos.x, rect.pos.y, 0.0f};
+    vertices[1].position = {rect.pos.x + rect.dim.x, rect.pos.y, 0.0f};
+    vertices[2].position = {rect.pos.x + rect.dim.x, rect.pos.y + rect.dim.y, 0.0f}; 
+    vertices[3].position = {rect.pos.x, rect.pos.y + rect.dim.y, 0.0f}; 
+
+    vertices[0].texCoord = {0.0f, 0.0f};
+    vertices[1].texCoord = {1.0f, 0.0f};
+    vertices[2].texCoord = {1.0f, 1.0f};
+    vertices[3].texCoord = {0.0f, 1.0f};
+
+    for(int i = 0; i < 4; i++) {
+        vertices[i].colour = {0.0f, 0.0f, 1.0f};
+    }
+
+    for(int i = 0; i < 4; i++) {
+        vertices[i].texIndex = static_cast<float>(texIndex);
+    }
+
+    for(int i = 0; i < 4; i++) {
+        vertices[i].scale = 0.5f;
+    }
+    vbo.updateData((float*)vertices, sizeof(vertices));
 }
 
 

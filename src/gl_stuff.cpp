@@ -62,6 +62,12 @@ void VBO::addData(GLfloat *vertices, int size) {
     this->unbind();
 }
 
+void VBO::updateData(GLfloat *vertices, int size) {
+    this->bind();
+    glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr)size, vertices);
+    this->unbind();
+}
+
 
 
 EBO::EBO() {

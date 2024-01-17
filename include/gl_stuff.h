@@ -19,19 +19,19 @@ class VBO {
     void bind();
     void unbind();
     void addData(GLfloat *vertices, int size);   
+    void updateData(GLfloat *vertices, int size); 
 
 };
 
 
 class EBO {
   public:
-      GLuint ref;
-      EBO();
-      ~EBO();
-      void bind();
-      void unbind();
-      void addData(GLuint *indices, int size);
-      
+    GLuint ref;
+    EBO();
+    ~EBO();
+    void bind();
+    void unbind();
+    void addData(GLuint *indices, int size);
 };
 
 class VAO {

@@ -5,6 +5,10 @@
 #include "textures.h"
 #include "shader.h"
 
+void glide(rect& texRect) {
+    texRect.pos.x += 0.1f;
+}
+
 int main() {
     App app = App(800, 800, "Testing Window", false, true);
     printf("setting up rects\n");
@@ -14,12 +18,18 @@ int main() {
     Texture::initShader();
     Texture *tex = new Texture("./assets/ass.png", GL_RGB, GL_UNSIGNED_BYTE, texRect, 0);
 
+
     app.add_system(SystemType::Update, [tex]() {
             tex->draw();
+        })
+        .add_system(SystemType::Update, [&texRect, tex]() {
+            texRect.pos.x += 0.01f;  
+            tex->updateRect(texRect);
         });
 
     app.run();
 }
+
 
     
 

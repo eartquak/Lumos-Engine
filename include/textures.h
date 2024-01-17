@@ -37,6 +37,7 @@ class Texture {
     static std::vector<int> texUnits;
     static void initShader();
     void draw();
+    void updateRect(rect rect);
 };
 
 
