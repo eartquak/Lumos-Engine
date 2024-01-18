@@ -4,7 +4,6 @@ int WINDOW_HEIGHT;
 int WINDOW_WIDTH;
 std::vector<std::thread> App::fixed_update_threads;
 
-
 void App::create_window() {
     if (this->headless) {
         spdlog::debug("Creating headless window");
@@ -19,7 +18,8 @@ void App::create_window() {
         spdlog::error("Failed to initialize GLFW");
     }
 
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, this->window_title, nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT,
+                                          this->window_title, nullptr, nullptr);
     this->window = window;
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, this->resizable);
 
@@ -39,7 +39,8 @@ void App::create_window() {
         // Handle GLEW initialization failure
     }
 }
-App::App(int window_width, int window_height, const char* window_title, bool resizable, bool debug) {
+App::App(int window_width, int window_height, const char* window_title,
+         bool resizable, bool debug) {
     spdlog::info("Starting Lumos Engine 🌕");
     if (debug) {
         spdlog::set_level(spdlog::level::debug);
@@ -59,11 +60,10 @@ App::App(bool debug) {
     this->headless = true;
 }
 
-App::~App() {
-    spdlog::info("Closing Lumos Engine 🌑");
-}
+App::~App() { spdlog::info("Closing Lumos Engine 🌑"); }
 
-App& App::add_system(SystemType type, std::function<void()> function) {
+App& App::add_system(SystemType type, std::function<void()> function,
+                     int milliseconds) {
     std::string system_type;
     switch (type) {
         case SystemType::Startup:
@@ -74,17 +74,6 @@ App& App::add_system(SystemType type, std::function<void()> function) {
             this->update_functions.push_back(function);
             system_type = "Update";
             break;
-        default:
-            break;
-    }
-    spdlog::debug("Adding system of type {}", system_type);
-    return *this;
-}
-
-App& App::add_system(SystemType type, std::function<void()> function, int milliseconds) {
-    std::string system_type;
-
-    switch (type) {
         case SystemType::FixedUpdate:
             this->fixed_update_functions.push_back({function, milliseconds});
             system_type = "FixedUpdate";
@@ -95,6 +84,22 @@ App& App::add_system(SystemType type, std::function<void()> function, int millis
     spdlog::debug("Adding system of type {}", system_type);
     return *this;
 }
+
+// App& App::add_system(SystemType type, std::function<void()> function,
+//                      int milliseconds) {
+//     std::string system_type;
+
+//     switch (type) {
+//         case SystemType::FixedUpdate:
+//             this->fixed_update_functions.push_back({function, milliseconds});
+//             system_type = "FixedUpdate";
+//             break;
+//         default:
+//             break;
+//     }
+//     spdlog::debug("Adding system of type {}", system_type);
+//     return *this;
+// }
 
 void App::run() {
     this->create_window();
@@ -108,10 +113,11 @@ void App::run() {
     for (const std::function<void()>& function : startup_functions) {
         function();
     }
-    
+
     spdlog::debug("Running the fixed update functions");
     // Fixed update functions
-    for (const std::pair<std::function<void()>, int>& function_pair : fixed_update_functions) {
+    for (const std::pair<std::function<void()>, int>& function_pair :
+         fixed_update_functions) {
         const std::function<void()>& function = function_pair.first;
         int milliseconds = function_pair.second;
 
@@ -119,11 +125,12 @@ void App::run() {
         fixed_update_threads.emplace_back([function, milliseconds]() {
             while (true) {
                 function();
-                std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+                std::this_thread::sleep_for(
+                    std::chrono::milliseconds(milliseconds));
             }
         });
     }
-    
+
     spdlog::debug("Running the main loop (contains update function loop)");
     if (!this->headless) {
         // Main loop
@@ -142,8 +149,7 @@ void App::run() {
             glfwPollEvents();
         }
     }
-    
-    
+
     spdlog::debug("Terminating the fixed update functions");
     // Set the termination flag for fixed update threads
     for (auto& thread : fixed_update_threads) {
@@ -151,7 +157,6 @@ void App::run() {
             thread.join();  // Wait for each fixed update thread to finish
         }
     }
-    
 
     // Clean up GLFW
     glfwTerminate();
