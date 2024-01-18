@@ -12,6 +12,11 @@ int main() {
         if (key == GLFW_KEY_A && action == GLFW_PRESS) {
             spdlog::info("A key pressed");
         }
+    })
+    .add_mouse_callback_system([&](int button, int action) {
+        if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
+            spdlog::info("Left mouse button pressed");
+        }
     });
     app.run();
 }

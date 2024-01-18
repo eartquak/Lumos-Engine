@@ -87,6 +87,11 @@ App& App::add_key_callback_system(
     return *this;
 }
 
+App& App::add_mouse_callback_system(std::function<void(int, int)> function) {
+    this->mouse_callback_functions.push_back(function);
+    return *this;
+}
+
 void App::close() {
     glfwSetWindowShouldClose(this->window, GLFW_TRUE);
     glfwTerminate();
@@ -111,6 +116,17 @@ void App::run() {
             function(key, scancode, action, mods);
         }
     });
+
+    spdlog::info("Registering mouse callback functions");
+    glfwSetMouseButtonCallback(
+        this->window, [](GLFWwindow* window, int button, int action, int mods) {
+            spdlog::trace("Mouse callback function called");
+            App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
+            for (std::function<void(int, int)>& function :
+                 app->mouse_callback_functions) {
+                function(button, action);
+            }
+        });
 
     spdlog::info("Running the startup functions");
     // Functions run in the beginning

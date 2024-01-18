@@ -35,8 +35,12 @@ class App {
                                  ///< intervals.
     static std::vector<std::thread>
         fixed_update_threads;  ///< List of fixed update threads.
-    bool resizable;            ///< Flag indicating if the window is resizable.
-    bool headless = false;     ///< Flag indicating headless mode.
+    std::vector<std::function<void(int, int, int, int)>>
+        key_callback_functions;  ///< List of key callback functions.
+    std::vector<std::function<void(int, int)>>
+        mouse_callback_functions;  ///< List of mouse callback functions.
+    bool resizable;         ///< Flag indicating if the window is resizable.
+    bool headless = false;  ///< Flag indicating headless mode.
 
     /**
      * @brief Creates the application window using GLFW.
@@ -46,8 +50,6 @@ class App {
     void create_window();
 
    public:
-    std::vector<std::function<void(int, int, int, int)>>
-        key_callback_functions;  ///< List of key callback functions.
     /**
      * @brief Constructor for the App class.
      * @param window_width Width of the application window.
@@ -79,6 +81,7 @@ class App {
                                  int milliseconds = 1000 / 60);
     App& add_key_callback_system(
         std::function<void(int, int, int, int)> function);
+    App& add_mouse_callback_system(std::function<void(int, int)> function);
 
     /**
      * @brief Runs the Lumos application.
