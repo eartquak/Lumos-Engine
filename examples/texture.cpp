@@ -16,7 +16,7 @@ int main() {
     texRect.pos = {-0.5f, -0.5f};
     texRect.dim = { 1.0f,  1.0f};
     Texture::initShader();
-    Texture *tex = new Texture("./assets/ass.png", GL_RGB, GL_UNSIGNED_BYTE, texRect, 0);
+    Texture *tex = new Texture("../assets/ass.png", GL_RGB, GL_UNSIGNED_BYTE, texRect, 0);
 
 
     app.add_system(SystemType::Update, [tex]() {

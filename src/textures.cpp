@@ -101,7 +101,7 @@ void Texture::draw() {
 }
 
 void Texture::initShader() {
-    shader = new Shader("./assets/shaders/vert.glsl", "./assets/shaders/frag.glsl");
+    shader = new Shader("../assets/shaders/vert.glsl", "../assets/shaders/frag.glsl");
 }
 
 void Texture::updateRect(rect rect) {
