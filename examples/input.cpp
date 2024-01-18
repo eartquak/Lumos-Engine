@@ -7,6 +7,11 @@ int main() {
             spdlog::info("Escape key pressed");
             app.close();
         }
+    })
+    .add_key_callback_system([&](int key, int scancode, int action, int mods) {
+        if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+            spdlog::info("A key pressed");
+        }
     });
     app.run();
 }
