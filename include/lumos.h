@@ -16,17 +16,6 @@
 #include "shapes.h"
 
 /**
- * @enum SystemType
- * Enumerates the types of systems that can be added by the application.
- */
-enum SystemType {
-    Startup,      ///< Startup system executed once at the beginning.
-    Update,       ///< Update system executed every frame.
-    FixedUpdate,  ///< FixedUpdate system executed at fixed intervals.
-    KeyCallback   ///< KeyCallback system executed when a key is pressed.
-};
-
-/**
  * @class App
  * @brief Main class representing the Lumos application.
  *
@@ -44,8 +33,6 @@ class App {
     std::vector<std::pair<std::function<void()>, int>>
         fixed_update_functions;  ///< List of fixed update functions with
                                  ///< intervals.
-    std::vector<std::function<void()>>
-        key_callback_functions;  ///< List of key callback functions.
     static std::vector<std::thread>
         fixed_update_threads;  ///< List of fixed update threads.
     bool resizable;            ///< Flag indicating if the window is resizable.
@@ -59,6 +46,8 @@ class App {
     void create_window();
 
    public:
+    std::vector<std::function<void(int, int, int, int)>>
+        key_callback_functions;  ///< List of key callback functions.
     /**
      * @brief Constructor for the App class.
      * @param window_width Width of the application window.
@@ -84,16 +73,12 @@ class App {
      */
     ~App();
 
-    /**
-     * @brief Adds a fixed update system to the Lumos application with a
-     * specified interval.
-     * @param type Type of the system (FixedUpdate).
-     * @param function Function representing the system.
-     * @param seconds Interval at which the fixed update system should run.
-     * @return Reference to the current App instance for method chaining.
-     */
-    App& add_system(SystemType type, std::function<void()> function,
-                    int milliseconds = 1000 / 60);
+    App& add_startup_system(std::function<void()> function);
+    App& add_update_system(std::function<void()> function);
+    App& add_fixed_update_system(std::function<void()> function,
+                                 int milliseconds = 1000 / 60);
+    App& add_key_callback_system(
+        std::function<void(int, int, int, int)> function);
 
     /**
      * @brief Runs the Lumos application.
@@ -103,4 +88,6 @@ class App {
      * application is closed.
      */
     void run();
+
+    void close();
 };

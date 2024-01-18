@@ -1,6 +1,6 @@
 project('Lumos', ['cpp', 'c'],
   version: '0.1',
-  default_options: ['warning_level=3', 'cpp_std=c++20']
+  default_options: ['warning_level=3', 'cpp_std=c++20','debug_flags=-g']
 )
 
 compiler = meson.get_compiler('cpp')
@@ -11,4 +11,4 @@ spdlogDep = dependency('spdlog')
 incdir = include_directories('include')
 extdir = include_directories('external')
 
-executable('debug', ['examples/sand_fall.cpp', 'src/lumos.cpp', 'src/shapes.cpp'], dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], include_directories : [incdir, extdir])
+executable('debug', ['examples/input.cpp', 'src/lumos.cpp', 'src/shapes.cpp'], dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], include_directories : [incdir, extdir])

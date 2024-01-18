@@ -34,24 +34,23 @@ int main() {
                 (WORLD_WIDTH / GRID_SIZE_X) * CELL_SIZE_X,
                 //  glm::vec3{float(rand()) / RAND_MAX, 0.0, 0.0},
                 glm::vec3{red, green, blue}, PointType::Pixel};
-            if (j >= (GRID_SIZE_Y) / 10) q->is_visible = false;
+            // if (j >= (GRID_SIZE_Y) / 10) 
+            q->is_visible = false;
             temp.push_back(q);
         }
         grid.push_back(temp);
     }
 
-    app.add_system(SystemType::Update,
-                   [&] {
-                       for (size_t i = 0; i < GRID_SIZE_X; i++) {
-                           for (size_t j = 0; j < GRID_SIZE_Y; j++) {
-                               if (grid[i][j]->is_visible) {
-                                   grid[i][j]->draw();
-                               }
-                           }
-                       }
-                   })
-        .add_system(  // Systems for updating particle physics
-            SystemType::FixedUpdate,
+    app.add_update_system([&] {
+           for (size_t i = 0; i < GRID_SIZE_X; i++) {
+               for (size_t j = 0; j < GRID_SIZE_Y; j++) {
+                   if (grid[i][j]->is_visible) {
+                       grid[i][j]->draw();
+                   }
+               }
+           }
+       })
+        .add_fixed_update_system(  // Systems for updating particle physics
             [&] {
                 for (size_t i = 0; i < GRID_SIZE_X; i++) {
                     for (size_t j = 1; j < GRID_SIZE_Y;
@@ -81,8 +80,7 @@ int main() {
                 }
             },
             1)
-        .add_system(
-            SystemType::FixedUpdate,
+        .add_fixed_update_system(
             [&] {
                 for (size_t i = 0; i < GRID_SIZE_X; i++) {
                     if (rand() % 100 == 0) {
@@ -90,6 +88,13 @@ int main() {
                     }
                 }
             },
-            10);
+            10)
+        .add_key_callback_system([&](int key, int scancode, int action,
+                                     int mods) {
+            if (key == GLFW_KEY_A && action == GLFW_PRESS) {
+                spdlog::debug("Escape key pressed, closing the application");
+                app.close();
+            }
+        });
     app.run();
 }

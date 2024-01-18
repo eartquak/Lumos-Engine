@@ -11,7 +11,7 @@ void App::create_window() {
         return;
     }
 
-    spdlog::debug("Creating window");
+    spdlog::trace("Creating window");
 
     // Initialize GLFW
     if (!glfwInit()) {
@@ -34,10 +34,13 @@ void App::create_window() {
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (err != GLEW_OK) {
-        fprintf(stderr, "GLEW error: %s\n", glewGetErrorString(err));
+        spdlog::error("GLEW error: {}", glewGetErrorString(err));
         glfwTerminate();
         // Handle GLEW initialization failure
     }
+
+    spdlog::info("Using OpenGL version {}, and C++ version {} ",
+                 glGetString(GL_VERSION), __cplusplus);
 }
 App::App(int window_width, int window_height, const char* window_title,
          bool resizable, bool debug) {
@@ -62,44 +65,32 @@ App::App(bool debug) {
 
 App::~App() { spdlog::info("Closing Lumos Engine 🌑"); }
 
-App& App::add_system(SystemType type, std::function<void()> function,
-                     int milliseconds) {
-    std::string system_type;
-    switch (type) {
-        case SystemType::Startup:
-            this->startup_functions.push_back(function);
-            system_type = "Startup";
-            break;
-        case SystemType::Update:
-            this->update_functions.push_back(function);
-            system_type = "Update";
-            break;
-        case SystemType::FixedUpdate:
-            this->fixed_update_functions.push_back({function, milliseconds});
-            system_type = "FixedUpdate";
-            break;
-        default:
-            break;
-    }
-    spdlog::debug("Adding system of type {}", system_type);
+App& App::add_startup_system(std::function<void()> function) {
+    this->startup_functions.push_back(function);
     return *this;
 }
 
-// App& App::add_system(SystemType type, std::function<void()> function,
-//                      int milliseconds) {
-//     std::string system_type;
+App& App::add_update_system(std::function<void()> function) {
+    this->update_functions.push_back(function);
+    return *this;
+}
 
-//     switch (type) {
-//         case SystemType::FixedUpdate:
-//             this->fixed_update_functions.push_back({function, milliseconds});
-//             system_type = "FixedUpdate";
-//             break;
-//         default:
-//             break;
-//     }
-//     spdlog::debug("Adding system of type {}", system_type);
-//     return *this;
-// }
+App& App::add_fixed_update_system(std::function<void()> function,
+                                  int milliseconds) {
+    this->fixed_update_functions.push_back({function, milliseconds});
+    return *this;
+}
+
+App& App::add_key_callback_system(
+    std::function<void(int, int, int, int)> function) {
+    this->key_callback_functions.push_back(function);
+    return *this;
+}
+
+void App::close() {
+    glfwSetWindowShouldClose(this->window, GLFW_TRUE);
+    glfwTerminate();
+}
 
 void App::run() {
     this->create_window();
@@ -108,13 +99,26 @@ void App::run() {
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    spdlog::debug("Running the startup functions");
+    glfwSetWindowUserPointer(this->window, this);
+
+    spdlog::info("Registering key callback functions");
+    glfwSetKeyCallback(this->window, [](GLFWwindow* window, int key,
+                                        int scancode, int action, int mods) {
+        spdlog::trace("Key callback function called");
+        App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
+        for (std::function<void(int, int, int, int)>& function :
+             app->key_callback_functions) {
+            function(key, scancode, action, mods);
+        }
+    });
+
+    spdlog::info("Running the startup functions");
     // Functions run in the beginning
     for (const std::function<void()>& function : startup_functions) {
         function();
     }
 
-    spdlog::debug("Running the fixed update functions");
+    spdlog::info("Running the fixed update functions");
     // Fixed update functions
     for (const std::pair<std::function<void()>, int>& function_pair :
          fixed_update_functions) {
@@ -122,8 +126,8 @@ void App::run() {
         int milliseconds = function_pair.second;
 
         // Create and start a thread for the fixed update function
-        fixed_update_threads.emplace_back([function, milliseconds]() {
-            while (true) {
+        fixed_update_threads.emplace_back([&]() {
+            while (!glfwWindowShouldClose(this->window)) {
                 function();
                 std::this_thread::sleep_for(
                     std::chrono::milliseconds(milliseconds));
@@ -131,7 +135,7 @@ void App::run() {
         });
     }
 
-    spdlog::debug("Running the main loop (contains update function loop)");
+    spdlog::info("Running the main loop (contains update function loop)");
     if (!this->headless) {
         // Main loop
         while (!glfwWindowShouldClose(this->window)) {
@@ -150,7 +154,7 @@ void App::run() {
         }
     }
 
-    spdlog::debug("Terminating the fixed update functions");
+    spdlog::info("Terminating the fixed update functions");
     // Set the termination flag for fixed update threads
     for (auto& thread : fixed_update_threads) {
         if (thread.joinable()) {
@@ -159,5 +163,5 @@ void App::run() {
     }
 
     // Clean up GLFW
-    glfwTerminate();
+    this->close();
 }
