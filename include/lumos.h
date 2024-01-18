@@ -39,6 +39,8 @@ class App {
         key_callback_functions;  ///< List of key callback functions.
     std::vector<std::function<void(int, int)>>
         mouse_callback_functions;  ///< List of mouse callback functions.
+    std::vector<std::function<void(int, int, int)>>
+        scroll_callback_functions;  ///< List of scroll callback functions.
     bool resizable;         ///< Flag indicating if the window is resizable.
     bool headless = false;  ///< Flag indicating headless mode.
 
@@ -82,6 +84,7 @@ class App {
     App& add_key_callback_system(
         std::function<void(int, int, int, int)> function);
     App& add_mouse_callback_system(std::function<void(int, int)> function);
+    App& add_scroll_callback_system(std::function<void(int, int, int)> function);
 
     /**
      * @brief Runs the Lumos application.

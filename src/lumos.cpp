@@ -92,6 +92,11 @@ App& App::add_mouse_callback_system(std::function<void(int, int)> function) {
     return *this;
 }
 
+App& App::add_scroll_callback_system(std::function<void(int, int, int)> function) {
+    this->scroll_callback_functions.push_back(function);
+    return *this;
+}
+
 void App::close() {
     glfwSetWindowShouldClose(this->window, GLFW_TRUE);
     glfwTerminate();
@@ -125,6 +130,17 @@ void App::run() {
             for (std::function<void(int, int)>& function :
                  app->mouse_callback_functions) {
                 function(button, action);
+            }
+        });
+    
+    spdlog::info("Registering scroll callback functions");
+    glfwSetScrollCallback(
+        this->window, [](GLFWwindow* window, double xoffset, double yoffset) {
+            spdlog::trace("Scroll callback function called");
+            App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
+            for (std::function<void(int, int, int)>& function :
+                 app->scroll_callback_functions) {
+                function(xoffset, yoffset, 0);
             }
         });
 

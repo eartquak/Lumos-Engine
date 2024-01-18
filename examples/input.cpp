@@ -17,6 +17,10 @@ int main() {
         if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS) {
             spdlog::info("Left mouse button pressed");
         }
+    })
+    .add_scroll_callback_system([&](int xoffset, int yoffset, int action) {
+        spdlog::info("Scroll callback function called");
+        spdlog::info("xoffset: {}, yoffset: {}, action: {}", xoffset, yoffset, action);
     });
     app.run();
 }
