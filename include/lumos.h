@@ -43,6 +43,7 @@ class App {
         scroll_callback_functions;  ///< List of scroll callback functions.
     bool resizable;         ///< Flag indicating if the window is resizable.
     bool headless = false;  ///< Flag indicating headless mode.
+    bool __is_mouse_pressed = false; ///< Flag indicating if the mouse is pressed.
 
     /**
      * @brief Creates the application window using GLFW.
@@ -85,6 +86,10 @@ class App {
         std::function<void(int, int, int, int)> function);
     App& add_mouse_callback_system(std::function<void(int, int)> function);
     App& add_scroll_callback_system(std::function<void(int, int, int)> function);
+
+    std::pair<double, double> get_mouse_position();
+
+    bool is_mouse_pressed();
 
     /**
      * @brief Runs the Lumos application.

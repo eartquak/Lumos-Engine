@@ -92,7 +92,8 @@ App& App::add_mouse_callback_system(std::function<void(int, int)> function) {
     return *this;
 }
 
-App& App::add_scroll_callback_system(std::function<void(int, int, int)> function) {
+App& App::add_scroll_callback_system(
+    std::function<void(int, int, int)> function) {
     this->scroll_callback_functions.push_back(function);
     return *this;
 }
@@ -100,6 +101,17 @@ App& App::add_scroll_callback_system(std::function<void(int, int, int)> function
 void App::close() {
     glfwSetWindowShouldClose(this->window, GLFW_TRUE);
     glfwTerminate();
+}
+
+std::pair<double, double> App::get_mouse_position() {
+    double xpos, ypos;
+    glfwGetCursorPos(this->window, &xpos, &ypos);
+    ypos = WINDOW_WIDTH - ypos;
+    return {xpos, ypos};
+}
+
+bool App::is_mouse_pressed() {
+    return this->__is_mouse_pressed;
 }
 
 void App::run() {
@@ -127,12 +139,20 @@ void App::run() {
         this->window, [](GLFWwindow* window, int button, int action, int mods) {
             spdlog::trace("Mouse callback function called");
             App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
+
+            // if (action == GLFW_PRESS) {
+            //     if (!app->__is_mouse_pressed) {
+
+            //     }
+            // }
+            app->__is_mouse_pressed = (action == GLFW_PRESS);
+
             for (std::function<void(int, int)>& function :
                  app->mouse_callback_functions) {
                 function(button, action);
             }
         });
-    
+
     spdlog::info("Registering scroll callback functions");
     glfwSetScrollCallback(
         this->window, [](GLFWwindow* window, double xoffset, double yoffset) {
