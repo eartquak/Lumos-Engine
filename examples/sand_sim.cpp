@@ -60,9 +60,9 @@ int main() {
             [&] {
                 locator->radius = brushRadius * 2.0f;
 
-                // locator->position =
-                //     glm::vec2{std::get<0>(app->get_mouse_position()),
-                //               std::get<1>(app->get_mouse_position())};
+                locator->position =
+                    glm::vec2{std::get<0>(app->get_mouse_position()),
+                              std::get<1>(app->get_mouse_position())};
 
                 for (size_t i = 0; i < GRID_SIZE_X; i++) {
                     for (size_t j = 1; j < GRID_SIZE_Y;

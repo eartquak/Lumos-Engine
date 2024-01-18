@@ -34,7 +34,7 @@ int main() {
                 (WORLD_WIDTH / GRID_SIZE_X) * CELL_SIZE_X,
                 //  glm::vec3{float(rand()) / RAND_MAX, 0.0, 0.0},
                 glm::vec3{red, green, blue}, PointType::Pixel};
-            // if (j >= (GRID_SIZE_Y) / 10) 
+            // if (j >= (GRID_SIZE_Y) / 10)
             q->is_visible = false;
             temp.push_back(q);
         }
