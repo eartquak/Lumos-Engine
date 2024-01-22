@@ -52,6 +52,8 @@ App::App(int window_width, int window_height, const char* window_title,
     WINDOW_HEIGHT = window_height;
     this->window_title = window_title;
     this->resizable = resizable;
+
+    this->create_window();
 }
 
 // Opens app in headless mode
@@ -115,7 +117,7 @@ bool App::is_mouse_pressed() {
 }
 
 void App::run() {
-    this->create_window();
+    //this->create_window();
 
     if (!this->headless) {
         glClear(GL_COLOR_BUFFER_BIT);
