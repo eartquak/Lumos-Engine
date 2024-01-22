@@ -3,6 +3,7 @@
 #include "shader.h"
 #include "stb/stb_image.h"
 #include <stdio.h>
+#include <spdlog/spdlog.h>
 
 struct vertTex {
     glm::vec3 position;

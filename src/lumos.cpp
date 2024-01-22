@@ -63,6 +63,8 @@ App::App(bool debug) {
         spdlog::set_level(spdlog::level::debug);
     }
     this->headless = true;
+
+    this->create_window();
 }
 
 App::~App() { spdlog::info("Closing Lumos Engine 🌑"); }
@@ -113,6 +115,7 @@ std::pair<double, double> App::get_mouse_position() {
 }
 
 bool App::is_mouse_pressed() {
+    spdlog::warn("is_mouse_pressed is not working as intended");
     return this->__is_mouse_pressed;
 }
 
@@ -142,11 +145,6 @@ void App::run() {
             spdlog::trace("Mouse callback function called");
             App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
 
-            // if (action == GLFW_PRESS) {
-            //     if (!app->__is_mouse_pressed) {
-
-            //     }
-            // }
             app->__is_mouse_pressed = (action == GLFW_PRESS);
 
             for (std::function<void(int, int)>& function :
@@ -167,13 +165,11 @@ void App::run() {
         });
 
     spdlog::info("Running the startup functions");
-    // Functions run in the beginning
     for (const std::function<void()>& function : startup_functions) {
         function();
     }
 
     spdlog::info("Running the fixed update functions");
-    // Fixed update functions
     for (const std::pair<std::function<void()>, int>& function_pair :
          fixed_update_functions) {
         const std::function<void()>& function = function_pair.first;
@@ -189,7 +185,7 @@ void App::run() {
         });
     }
 
-    spdlog::info("Running the main loop (contains update function loop)");
+    spdlog::info("Running the main loop");
     if (!this->headless) {
         // Main loop
         while (!glfwWindowShouldClose(this->window)) {
@@ -216,6 +212,7 @@ void App::run() {
         }
     }
 
+    spdlog::info("Cleaning up opengl");
     // Clean up GLFW
     this->close();
 }
