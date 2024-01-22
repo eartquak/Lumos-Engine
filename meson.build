@@ -11,4 +11,4 @@ spdlogDep = dependency('spdlog')
 incdir = include_directories('include')
 extdir = include_directories('external')
 
-executable('debug', ['examples/sand_sim.cpp', 'src/lumos.cpp', 'src/shapes.cpp'], dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], include_directories : [incdir, extdir])
+executable('debug', ['examples/checkerboard.cpp', 'src/lumos.cpp', 'src/shapes.cpp'], dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], include_directories : [incdir, extdir])
