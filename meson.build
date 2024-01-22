@@ -10,7 +10,6 @@ glfwDep = dependency('glfw3')
 spdlogDep = dependency('spdlog')
 incdir = include_directories('include')
 extdir = include_directories('external')
-enttdir = include_directories('external/entt/src/')
 stb_src = ['external/stb/stb.cpp']
 
 build_src =  ['src/lumos.cpp',
@@ -24,4 +23,4 @@ to_build = ['examples/texture.cpp']
 build_src += stb_src
 build_src += to_build
 
-executable('debug', build_src, dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], include_directories : [incdir, extdir, enttdir])
+executable('debug', build_src, dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], include_directories : [incdir, extdir])
