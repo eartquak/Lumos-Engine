@@ -21,10 +21,10 @@ int main() {
     App app = App(800, 600, "Testing Window");
     Box* box = new Box(glm::vec2{-0.5f, -0.5f}, 1.0f, 1.0f, glm::vec3{1.0f, 0.0f, 0.0f});
 
-    app.add_system(SystemType::Update, [&box]() {
+    app.add_update_system([&box]() {
            box->draw();
        })
-        .add_system(SystemType::FixedUpdate, [&box]() {
+        .add_fixed_update_system([&box]() {
             box->glide();
         }, 1)
         .run();

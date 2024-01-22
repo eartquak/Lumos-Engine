@@ -4,7 +4,6 @@ int WINDOW_HEIGHT;
 int WINDOW_WIDTH;
 std::vector<std::thread> App::fixed_update_threads;
 
-
 void App::create_window() {
     if (this->headless) {
         spdlog::debug("Creating headless window");
@@ -12,14 +11,15 @@ void App::create_window() {
         return;
     }
 
-    spdlog::debug("Creating window");
+    spdlog::trace("Creating window");
 
     // Initialize GLFW
     if (!glfwInit()) {
         spdlog::error("Failed to initialize GLFW");
     }
 
-    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, this->window_title, nullptr, nullptr);
+    GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT,
+                                          this->window_title, nullptr, nullptr);
     this->window = window;
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, this->resizable);
 
@@ -34,12 +34,16 @@ void App::create_window() {
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (err != GLEW_OK) {
-        fprintf(stderr, "GLEW error: %s\n", glewGetErrorString(err));
+        spdlog::error("GLEW error: {}", glewGetErrorString(err));
         glfwTerminate();
         // Handle GLEW initialization failure
     }
+
+    spdlog::info("Using OpenGL version {}, and C++ version {} ",
+                 glGetString(GL_VERSION), __cplusplus);
 }
-App::App(int window_width, int window_height, const char* window_title, bool resizable, bool debug) {
+App::App(int window_width, int window_height, const char* window_title,
+         bool resizable, bool debug) {
     spdlog::info("Starting Lumos Engine 🌕");
     if (debug) {
         spdlog::set_level(spdlog::level::debug);
@@ -61,41 +65,55 @@ App::App(bool debug) {
     this->headless = true;
 }
 
-App::~App() {
-    spdlog::info("Closing Lumos Engine 🌑");
-}
+App::~App() { spdlog::info("Closing Lumos Engine 🌑"); }
 
-App& App::add_system(SystemType type, std::function<void()> function) {
-    std::string system_type;
-    switch (type) {
-        case SystemType::Startup:
-            this->startup_functions.push_back(function);
-            system_type = "Startup";
-            break;
-        case SystemType::Update:
-            this->update_functions.push_back(function);
-            system_type = "Update";
-            break;
-        default:
-            break;
-    }
-    spdlog::debug("Adding system of type {}", system_type);
+App& App::add_startup_system(std::function<void()> function) {
+    this->startup_functions.push_back(function);
     return *this;
 }
 
-App& App::add_system(SystemType type, std::function<void()> function, int milliseconds) {
-    std::string system_type;
-
-    switch (type) {
-        case SystemType::FixedUpdate:
-            this->fixed_update_functions.push_back({function, milliseconds});
-            system_type = "FixedUpdate";
-            break;
-        default:
-            break;
-    }
-    spdlog::debug("Adding system of type {}", system_type);
+App& App::add_update_system(std::function<void()> function) {
+    this->update_functions.push_back(function);
     return *this;
+}
+
+App& App::add_fixed_update_system(std::function<void()> function,
+                                  int milliseconds) {
+    this->fixed_update_functions.push_back({function, milliseconds});
+    return *this;
+}
+
+App& App::add_key_callback_system(
+    std::function<void(int, int, int, int)> function) {
+    this->key_callback_functions.push_back(function);
+    return *this;
+}
+
+App& App::add_mouse_callback_system(std::function<void(int, int)> function) {
+    this->mouse_callback_functions.push_back(function);
+    return *this;
+}
+
+App& App::add_scroll_callback_system(
+    std::function<void(int, int, int)> function) {
+    this->scroll_callback_functions.push_back(function);
+    return *this;
+}
+
+void App::close() {
+    glfwSetWindowShouldClose(this->window, GLFW_TRUE);
+    glfwTerminate();
+}
+
+std::pair<double, double> App::get_mouse_position() {
+    double xpos, ypos;
+    glfwGetCursorPos(this->window, &xpos, &ypos);
+    ypos = WINDOW_WIDTH - ypos;
+    return {xpos, ypos};
+}
+
+bool App::is_mouse_pressed() {
+    return this->__is_mouse_pressed;
 }
 
 void App::run() {
@@ -105,28 +123,73 @@ void App::run() {
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    spdlog::debug("Running the startup functions");
+    glfwSetWindowUserPointer(this->window, this);
+
+    spdlog::info("Registering key callback functions");
+    glfwSetKeyCallback(this->window, [](GLFWwindow* window, int key,
+                                        int scancode, int action, int mods) {
+        spdlog::trace("Key callback function called");
+        App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
+        for (std::function<void(int, int, int, int)>& function :
+             app->key_callback_functions) {
+            function(key, scancode, action, mods);
+        }
+    });
+
+    spdlog::info("Registering mouse callback functions");
+    glfwSetMouseButtonCallback(
+        this->window, [](GLFWwindow* window, int button, int action, int mods) {
+            spdlog::trace("Mouse callback function called");
+            App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
+
+            // if (action == GLFW_PRESS) {
+            //     if (!app->__is_mouse_pressed) {
+
+            //     }
+            // }
+            app->__is_mouse_pressed = (action == GLFW_PRESS);
+
+            for (std::function<void(int, int)>& function :
+                 app->mouse_callback_functions) {
+                function(button, action);
+            }
+        });
+
+    spdlog::info("Registering scroll callback functions");
+    glfwSetScrollCallback(
+        this->window, [](GLFWwindow* window, double xoffset, double yoffset) {
+            spdlog::trace("Scroll callback function called");
+            App* app = static_cast<App*>(glfwGetWindowUserPointer(window));
+            for (std::function<void(int, int, int)>& function :
+                 app->scroll_callback_functions) {
+                function(xoffset, yoffset, 0);
+            }
+        });
+
+    spdlog::info("Running the startup functions");
     // Functions run in the beginning
     for (const std::function<void()>& function : startup_functions) {
         function();
     }
-    
-    spdlog::debug("Running the fixed update functions");
+
+    spdlog::info("Running the fixed update functions");
     // Fixed update functions
-    for (const std::pair<std::function<void()>, int>& function_pair : fixed_update_functions) {
+    for (const std::pair<std::function<void()>, int>& function_pair :
+         fixed_update_functions) {
         const std::function<void()>& function = function_pair.first;
         int milliseconds = function_pair.second;
 
         // Create and start a thread for the fixed update function
-        fixed_update_threads.emplace_back([function, milliseconds]() {
-            while (true) {
+        fixed_update_threads.emplace_back([&]() {
+            while (!glfwWindowShouldClose(this->window)) {
                 function();
-                std::this_thread::sleep_for(std::chrono::milliseconds(milliseconds));
+                std::this_thread::sleep_for(
+                    std::chrono::milliseconds(milliseconds));
             }
         });
     }
-    
-    spdlog::debug("Running the main loop (contains update function loop)");
+
+    spdlog::info("Running the main loop (contains update function loop)");
     if (!this->headless) {
         // Main loop
         while (!glfwWindowShouldClose(this->window)) {
@@ -144,17 +207,15 @@ void App::run() {
             glfwPollEvents();
         }
     }
-    
-    
-    spdlog::debug("Terminating the fixed update functions");
+
+    spdlog::info("Terminating the fixed update functions");
     // Set the termination flag for fixed update threads
     for (auto& thread : fixed_update_threads) {
         if (thread.joinable()) {
             thread.join();  // Wait for each fixed update thread to finish
         }
     }
-    
 
     // Clean up GLFW
-    glfwTerminate();
+    this->close();
 }
