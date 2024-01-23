@@ -1,6 +1,6 @@
 project('Lumos', ['cpp', 'c'],
   version: '0.1',
-  default_options: ['warning_level=3', 'cpp_std=c++20','debug_flags=-g']
+  default_options: ['warning_level=3', 'cpp_std=c++20']
 )
 
 compiler = meson.get_compiler('cpp')
@@ -10,5 +10,17 @@ glfwDep = dependency('glfw3')
 spdlogDep = dependency('spdlog')
 incdir = include_directories('include')
 extdir = include_directories('external')
+stb_src = ['external/stb/stb.cpp']
 
-executable('debug', ['examples/sand_sim.cpp', 'src/lumos.cpp', 'src/shapes.cpp'], dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], include_directories : [incdir, extdir])
+build_src =  ['src/lumos.cpp',
+              'src/gl_stuff.cpp',
+              'src/shader.cpp',
+              'src/shapes.cpp',
+              'src/textures.cpp']
+
+to_build = ['examples/texture.cpp']
+
+build_src += stb_src
+build_src += to_build
+
+executable('debug', build_src, dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], include_directories : [incdir, extdir])
