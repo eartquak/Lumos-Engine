@@ -18,9 +18,16 @@ build_src =  ['src/lumos.cpp',
               'src/shapes.cpp',
               'src/textures.cpp']
 
-to_build = ['examples/texture.cpp']
+to_build = ['examples/sand_sim.cpp']
 
 build_src += stb_src
 build_src += to_build
 
-executable('debug', build_src, dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], include_directories : [incdir, extdir])
+executable(
+  'debug', build_src, 
+  dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], 
+  include_directories : [incdir, extdir],
+  # Enable for profiling
+  # cpp_args: ['-pg', '-no-pie'],
+  # link_args: ['-pg', '-no-pie'],
+  )
