@@ -7,6 +7,12 @@ A 2-D game engine written in C++.
 3. Run `meson compile && ./debug`
 4. To change target file change the same in `meson.build`
 
+# How to set up build directory type
+1. In the parent dirctory calkl `meson build --buildtype debug`
+2. Here `build` is the directory name. We(Lumos Team) are choosing this by convention. If you want to rename it remember to add it to `.gitignore.`
+3. Furthermore, `debug` refers to build type. You can choose from `plain`, `debug`, `debugoptimized`, `release`, `minsize`, `custom`. You can read more about it [here](https://mesonbuild.com/Builtin-options.html#details-for-buildtype).
+4. Then proceed as stated in [How to run](#how-to-run)
+
 # Dependencies
 1. For GLFW and GLEW: `sudo apt-get install libglfw3-dev libglew-dev`
 2. For spdlog: `sudo apt-get install libspdlog-dev`
