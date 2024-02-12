@@ -6,14 +6,15 @@
 #pragma once
 
 #include <spdlog/spdlog.h>
-
+#include <stdio.h>
 #include <functional>
 #include <iostream>
 #include <thread>
 #include <vector>
-
+#include "gl_stuff.h"
 #include "data.h"
 #include "shapes.h"
+#include "entt/entt.hpp"
 
 /**
  * @class App
@@ -22,13 +23,16 @@
  * The App class manages the main loop, window creation, and system updates in
  * the Lumos application.
  */
+
+
+
 class App {
    private:
     const char* window_title;  ///< Title of the application window.
     GLFWwindow* window;        ///< GLFW window object.
-    std::vector<std::function<void()>>
+    std::vector<std::function<void(App&)>>
         startup_functions;  ///< List of startup functions.
-    std::vector<std::function<void()>>
+    std::vector<std::function<void(App&)>>
         update_functions;  ///< List of update functions.
     std::vector<std::pair<std::function<void()>, int>>
         fixed_update_functions;  ///< List of fixed update functions with
@@ -78,8 +82,8 @@ class App {
      */
     ~App();
 
-    App& add_startup_system(std::function<void()> function);
-    App& add_update_system(std::function<void()> function);
+    App& add_startup_system(std::function<void(App&)> function);
+    App& add_update_system(std::function<void(App&)> function);
     App& add_fixed_update_system(std::function<void()> function,
                                  int milliseconds = 1000 / 60);
     App& add_key_callback_system(
@@ -88,9 +92,9 @@ class App {
     App& add_scroll_callback_system(std::function<void(int, int, int)> function);
 
     std::pair<double, double> get_mouse_position();
-
     bool is_mouse_pressed();
-
+    entt::registry reg;
+    renderer* m_renderer;
     /**
      * @brief Runs the Lumos application.
      *
@@ -102,3 +106,15 @@ class App {
 
     void close();
 };
+
+/*
+void draw(App& app) {
+    entt::registry& reg = app.reg;
+    auto view = reg.view<isDrawn, transform>(); 
+    view.each([](const auto &transform, auto &isDrawn)
+    {
+
+    }); 
+
+}
+*/

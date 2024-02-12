@@ -1,5 +1,9 @@
 #include "gl_stuff.h"
 
+
+
+#define INDEX(i) { 0 + i*4, 2 + i*4, 1 + i*4, 0 + i*4, 3 + i*4, 2 + i*4 }
+
 VAO::VAO() {
     glGenVertexArrays(1, &ref);
 }
@@ -62,9 +66,9 @@ void VBO::addData(GLfloat *vertices, int size) {
     this->unbind();
 }
 
-void VBO::updateData(GLfloat *vertices, int size) {
+void VBO::updateData(GLfloat *vertices, int size, int offset) {
     this->bind();
-    glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr)size, vertices);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, size, vertices);
     this->unbind();
 }
 
@@ -92,5 +96,41 @@ void EBO::addData(GLuint *indices, int size) {
     this->unbind();
 }
 
+void EBO::updateData(GLuint *indices, int size, int offset) {
+    this->bind();
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, indices);
+    this->unbind();
+}
+
+renderer::renderer() {
+    vao.attachIndex(&ebo);
+    ebo.addData(nullptr, 6 * REND_MAX);
+    vbo.addData(nullptr, REND_MAX * sizeof(vertTexQuad));
+    vao.attachIndex(&ebo);
+    
+    vao.linkEnableAttrib(&vbo, 0, 3, GL_FLOAT, sizeof(struct vertTex),
+                         (void*)offsetof(vertTex, position));
+    vao.linkEnableAttrib(&vbo, 1, 3, GL_FLOAT, sizeof(struct vertTex),
+                         (void*)offsetof(vertTex, colour));
+    vao.linkEnableAttrib(&vbo, 2, 2, GL_FLOAT, sizeof(struct vertTex),
+                         (void*)offsetof(vertTex, texCoord));
+    vao.linkEnableAttrib(&vbo, 3, 1, GL_FLOAT, sizeof(struct vertTex),
+                         (void*)offsetof(vertTex, texIndex));
+    
+}
+
+void renderer::updateData(int index, vertTexQuad data) {
+    vbo.updateData((float*)&data, sizeof(vertTexQuad), index*sizeof(vertTexQuad));
+    uint indexData[] = INDEX((uint)index);
+    ebo.updateData(indexData, sizeof(indexData), index*sizeof(indexData));
+}
+
+void renderer::draw() {
+    vao.draw(vbo_pos * 6);
+}
+int renderer::getFree() {
+    vbo_pos = vbo_pos + 1;
+    return vbo_pos - 1;  
+}
 
 

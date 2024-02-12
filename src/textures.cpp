@@ -5,7 +5,7 @@ std::vector<int> Texture::texUnits = {};
 Shader* Texture::shader = nullptr;
 // printf("Compiled...\n");
 
-Texture::Texture(const char* path, GLenum format, GLenum pixelType, rect rect,
+Texture::Texture(const char* path, GLenum format, GLenum pixelType,
                  GLuint slot) {
     stbi_set_flip_vertically_on_load(true);
 
@@ -57,28 +57,7 @@ Texture::Texture(const char* path, GLenum format, GLenum pixelType, rect rect,
         vertices[i].scale = 0.5f;
     }*/
 
-    GLuint indices[] = {
-        0, 2, 1,  // Upper triangle
-        0, 3, 2,  // Lower triangle
-    };
 
-    vbo.addData(nullptr, 4 * sizeof(vertTex));
-    updateRect(rect);
-
-    ebo.addData(indices, sizeof(indices));
-
-    vao.attachIndex(&ebo);
-
-    vao.linkEnableAttrib(&vbo, 0, 3, GL_FLOAT, sizeof(struct vertTex),
-                         (void*)offsetof(vertTex, position));
-    vao.linkEnableAttrib(&vbo, 1, 3, GL_FLOAT, sizeof(struct vertTex),
-                         (void*)offsetof(vertTex, colour));
-    vao.linkEnableAttrib(&vbo, 2, 2, GL_FLOAT, sizeof(struct vertTex),
-                         (void*)offsetof(vertTex, texCoord));
-    vao.linkEnableAttrib(&vbo, 3, 1, GL_FLOAT, sizeof(struct vertTex),
-                         (void*)offsetof(vertTex, texIndex));
-    vao.linkEnableAttrib(&vbo, 4, 1, GL_FLOAT, sizeof(struct vertTex),
-                         (void*)offsetof(vertTex, scale));
 
     u_textures = glGetUniformLocation(shader->ref, "u_textures");
 }
@@ -97,40 +76,62 @@ void Texture::load(GLuint slot) {
                  Texture::texUnits.data());
 }
 
-void Texture::draw() {
-    shader->Activate();
-    vao.draw(6);
-}
 
 void Texture::initShader() {
-    shader = new Shader("../assets/shaders/vert.glsl",
-                        "../assets/shaders/frag.glsl");
+    shader = new Shader("./assets/shaders/vert.glsl",
+                        "./assets/shaders/frag.glsl");
 }
 
-void Texture::updateRect(rect rect) {
-    struct vertTex vertices[4];
+entt::entity sprite2D(App& app, glm::vec2 pos, glm::vec2 dim, float angle, glm::vec3 colour_in, Texture& texture) {
+    
+    angle = angle + 1;
+    struct vertTexQuad vertQuad;
+    vertQuad.vertices[0].position = {pos.x, pos.y, 0.0f};
+    vertQuad.vertices[1].position = {pos.x + dim.x, pos.y, 0.0f};
+    vertQuad.vertices[2].position = {pos.x + dim.x, pos.y + dim.y,0.0f};
+    vertQuad.vertices[3].position = {pos.x, pos.y + dim.y, 0.0f};
+    vertQuad.vertices[0].texCoord = {0.0f, 0.0f};
+    vertQuad.vertices[1].texCoord = {1.0f, 0.0f};
+    vertQuad.vertices[2].texCoord = {1.0f, 1.0f};
+    vertQuad.vertices[3].texCoord = {0.0f, 1.0f};
 
-    vertices[0].position = {rect.pos.x, rect.pos.y, 0.0f};
-    vertices[1].position = {rect.pos.x + rect.dim.x, rect.pos.y, 0.0f};
-    vertices[2].position = {rect.pos.x + rect.dim.x, rect.pos.y + rect.dim.y,
-                            0.0f};
-    vertices[3].position = {rect.pos.x, rect.pos.y + rect.dim.y, 0.0f};
-
-    vertices[0].texCoord = {0.0f, 0.0f};
-    vertices[1].texCoord = {1.0f, 0.0f};
-    vertices[2].texCoord = {1.0f, 1.0f};
-    vertices[3].texCoord = {0.0f, 1.0f};
-
-    for (int i = 0; i < 4; i++) {
-        vertices[i].colour = {0.0f, 0.0f, 1.0f};
+    for(int i = 0; i < 4; i++) {
+        vertQuad.vertices[i].colour = {0.0f, 0.0f, 1.0f};
     }
 
-    for (int i = 0; i < 4; i++) {
-        vertices[i].texIndex = static_cast<float>(texIndex);
+    for(int i = 0; i < 4; i++) {
+        vertQuad.vertices[i].texIndex = static_cast<float>(texture.texIndex);
     }
 
-    for (int i = 0; i < 4; i++) {
-        vertices[i].scale = 0.5f;
-    }
-    vbo.updateData((float*)vertices, sizeof(vertices));
+    renderer& renderer_in = *(app.m_renderer);
+    entt::registry& reg = app.reg;
+    entt::entity s2Dentt = reg.create();
+    reg.emplace<vertTexQuad>(s2Dentt, vertQuad);
+    reg.emplace<isDrawn>(s2Dentt, true);
+    reg.emplace<render>(s2Dentt, renderer_in, renderer_in.getFree());
+    reg.emplace<colour>(s2Dentt, (GLint)texture.texIndex, colour_in);
+    render r = reg.get<render>(s2Dentt);
+    renderer_in.updateData(r.slot, vertQuad);
+
+    return s2Dentt;
 }
+
+
+void updateRectS2D(glm::vec2 pos, glm::vec2 dim, float angle, vertTexQuad& vertQuad_in) {
+    angle = angle + 1;
+    struct vertTexQuad vertQuad;
+    vertQuad.vertices[0].position = {pos.x, pos.y, 0.0f};
+    vertQuad.vertices[1].position = {pos.x + dim.x, pos.y, 0.0f};
+    vertQuad.vertices[2].position = {pos.x + dim.x, pos.y + dim.y,0.0f};
+    vertQuad.vertices[3].position = {pos.x, pos.y + dim.y, 0.0f};
+    vertQuad.vertices[0].texCoord = {0.0f, 0.0f};
+    vertQuad.vertices[1].texCoord = {1.0f, 0.0f};
+    vertQuad.vertices[2].texCoord = {1.0f, 1.0f};
+    vertQuad.vertices[3].texCoord = {0.0f, 1.0f};
+
+    vertQuad_in = vertQuad;
+    
+}
+
+
+

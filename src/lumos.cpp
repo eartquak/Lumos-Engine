@@ -34,13 +34,13 @@ void App::create_window() {
     glewExperimental = GL_TRUE;
     GLenum err = glewInit();
     if (err != GLEW_OK) {
-        spdlog::error("GLEW error: {}", glewGetErrorString(err));
+        //spdlog::error("GLEW error: {}", glewGetErrorString(err));
         glfwTerminate();
         // Handle GLEW initialization failure
     }
 
-    spdlog::info("Using OpenGL version {}, and C++ version {} ",
-                 glGetString(GL_VERSION), __cplusplus);
+    //spdlog::info("Using OpenGL version {}, and C++ version {} ",
+    //             glGetString(GL_VERSION), __cplusplus);
 }
 
 App::App(int window_width, int window_height, const char* window_title,
@@ -53,8 +53,10 @@ App::App(int window_width, int window_height, const char* window_title,
     WINDOW_HEIGHT = window_height;
     this->window_title = window_title;
     this->resizable = resizable;
+    this->reg = entt::basic_registry();
 
     this->create_window();
+    this->m_renderer = new renderer();
 }
 
 // Opens app in headless mode
@@ -70,12 +72,12 @@ App::App(bool debug) {
 
 App::~App() { spdlog::info("Closing Lumos Engine 🌑"); }
 
-App& App::add_startup_system(std::function<void()> function) {
+App& App::add_startup_system(std::function<void(App&)> function) {
     this->startup_functions.push_back(function);
     return *this;
 }
 
-App& App::add_update_system(std::function<void()> function) {
+App& App::add_update_system(std::function<void(App&)> function) {
     this->update_functions.push_back(function);
     return *this;
 }
@@ -166,8 +168,8 @@ void App::run() {
         });
 
     spdlog::info("Running the startup functions");
-    for (const std::function<void()>& function : startup_functions) {
-        function();
+    for (const std::function<void(App&)>& function : startup_functions) {
+        function(*this);
     }
 
     spdlog::info("Running the fixed update functions");
@@ -193,13 +195,12 @@ void App::run() {
             glClear(GL_COLOR_BUFFER_BIT);
 
             // Update Functions (update every frame i.e every loop)
-            for (std::function<void()>& function : update_functions) {
-                function();
+            for (std::function<void(App&)>& function : update_functions) {
+                function(*this);
             }
 
             // Swap front and back buffers
             glfwSwapBuffers(this->window);
-
             // Poll for and process events
             glfwPollEvents();
         }
