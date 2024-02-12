@@ -72,13 +72,6 @@ struct isDrawn {
     bool draw;
 };
 
-class apple {
-    public:
-    apple() {
-        printf("apple\n");
-    }
-};
-
 
 class renderer {
   public:

@@ -8,16 +8,12 @@
 
 void startupFunc(App& app, Texture& tex) {
     sprite2D(app, glm::vec2(-0.5f, -0.5f), glm::vec2(0.1f, 0.1f), 0, glm::vec3(1.0f, 1.0f, 1.0f), tex); 
-    printf("apple\n");
     sprite2D(app, glm::vec2(0.5f, 0.5f), glm::vec2(0.1f, 0.1f), 0, glm::vec3(1.0f, 1.0f, 1.0f), tex); 
-    printf("apple1\n");
 }
 
 void updateFunc(App& app) {
     renderer* rend = app.m_renderer;
-    printf("%d\n", rend->vbo_pos);
     rend->draw();
-    printf("hello\n");
 }
 
 

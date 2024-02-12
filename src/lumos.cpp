@@ -194,7 +194,6 @@ void App::run() {
         while (!glfwWindowShouldClose(this->window)) {
             glClear(GL_COLOR_BUFFER_BIT);
 
-            printf("hello_me\n");
             // Update Functions (update every frame i.e every loop)
             for (std::function<void(App&)>& function : update_functions) {
                 function(*this);
@@ -202,7 +201,6 @@ void App::run() {
 
             // Swap front and back buffers
             glfwSwapBuffers(this->window);
-            printf("hello_me1\n");
             // Poll for and process events
             glfwPollEvents();
         }
