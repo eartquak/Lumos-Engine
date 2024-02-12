@@ -42,6 +42,7 @@ void App::create_window() {
     //spdlog::info("Using OpenGL version {}, and C++ version {} ",
     //             glGetString(GL_VERSION), __cplusplus);
 }
+
 App::App(int window_width, int window_height, const char* window_title,
          bool resizable, bool debug) {
     spdlog::info("Starting Lumos Engine 🌕");
