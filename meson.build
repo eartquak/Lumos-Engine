@@ -11,6 +11,7 @@ spdlogDep = dependency('spdlog')
 incdir = include_directories('include/')
 extdir = include_directories('external/')
 enttdir = include_directories('external/entt/src/')
+glmdir = include_directories('external/glm/')
 stb_src = ['external/stb/stb.cpp']
 
 build_src =  ['src/lumos.cpp',
@@ -27,7 +28,7 @@ build_src += to_build
 executable(
   'debug', build_src, 
   dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], 
-  include_directories : [incdir, extdir, enttdir],
+  include_directories : [incdir, extdir, enttdir, glmdir],
   # Enable for profiling
   # cpp_args: ['-pg', '-no-pie'],
   # link_args: ['-pg', '-no-pie'],
