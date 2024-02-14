@@ -11,6 +11,7 @@ spdlogDep = dependency('spdlog')
 incdir = include_directories('include/')
 extdir = include_directories('external/')
 enttdir = include_directories('external/entt/src/')
+glmdir = include_directories('external/glm/')
 stb_src = ['external/stb/stb.cpp']
 
 build_src =  ['src/lumos.cpp',
