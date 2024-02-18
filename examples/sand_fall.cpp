@@ -41,7 +41,7 @@ int main() {
         grid.push_back(temp);
     }
 
-    app.add_update_system([&] {
+    app.add_update_system([&] (App&){
            for (size_t i = 0; i < GRID_SIZE_X; i++) {
                for (size_t j = 0; j < GRID_SIZE_Y; j++) {
                    if (grid[i][j]->is_visible) {
@@ -51,7 +51,7 @@ int main() {
            }
        })
         .add_fixed_update_system(  // Systems for updating particle physics
-            [&] {
+            [&] (App&){
                 for (size_t i = 0; i < GRID_SIZE_X; i++) {
                     for (size_t j = 1; j < GRID_SIZE_Y;
                          j++) {  // Last layer will not get update (for now)
@@ -81,7 +81,7 @@ int main() {
             },
             1)
         .add_fixed_update_system(
-            [&] {
+            [&] (App&){
                 for (size_t i = 0; i < GRID_SIZE_X; i++) {
                     if (rand() % 100 == 0) {
                         grid[i][GRID_SIZE_Y - 1]->is_visible = true;

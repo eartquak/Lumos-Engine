@@ -30,10 +30,10 @@ int main() {
                      glm::vec2{300.0f, 100.0f}, glm::vec3{1.0f, 1.0f, 1.0f},
                      PointType::Pixel);
 
-    app.add_update_system([&box]() { box->draw(); })
-        .add_update_system([&point]() { point->draw(); })
-        .add_update_system([&circle]() { circle->draw(); })
-        .add_update_system([&line]() { line->draw(); })
-        .add_update_system([&tri]() { tri->draw(); })
+    app.add_update_system([&box](App&) { box->draw(); })
+        .add_update_system([&point](App&) { point->draw(); })
+        .add_update_system([&circle](App&) { circle->draw(); })
+        .add_update_system([&line](App&) { line->draw(); })
+        .add_update_system([&tri](App&) { tri->draw(); })
         .run();
 }
