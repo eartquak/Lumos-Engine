@@ -5,6 +5,7 @@
  */
 #pragma once
 
+#define DEBUG
 #include <spdlog/spdlog.h>
 #include <stdio.h>
 #include "gl_stuff.h"
@@ -18,6 +19,7 @@
 #include "entt/entt.hpp"
 #include "textures.h"
 
+
 /**
  * @class App
  * @brief Main class representing the Lumos application.
@@ -25,7 +27,6 @@
  * The App class manages the main loop, window creation, and system updates in
  * the Lumos application.
  */
-
 
 
 class App {
@@ -115,4 +116,9 @@ class App {
 entt::entity sprite2D(App& app, renderer& rend, rect& rect_in, Texture& texture, bool isShown);
 
 entt::entity sprite2D(App& app, renderer& rend, rect& rect_in, bool isShown);
+
+void glDebugOutput(GLenum source, GLenum type, 
+                    unsigned int id, GLenum severity, 
+                    GLsizei length, const char *message, 
+                    const void *userParam);
 

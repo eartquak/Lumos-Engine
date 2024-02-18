@@ -21,7 +21,7 @@ build_src =  ['src/lumos.cpp',
               'src/textures.cpp']
 
 
-to_build = ['examples/checkerboard.cpp']
+to_build = ['examples/sand_sim_copy.cpp']
 
 build_src += stb_src
 build_src += to_build
