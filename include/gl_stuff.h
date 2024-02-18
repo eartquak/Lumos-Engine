@@ -2,14 +2,48 @@
 
 #include <cmath>
 #include <GL/glew.h>
-#include <GLFW/glfw3.h>
+//#include <GLFW/glfw3.h>
 #include <iostream>
 #include "vector"
 #include "glm/glm.hpp"
 #include <stdio.h>
+#include "shader.h"
+#include "entt/entt.hpp"
 
 #define REND_MAX 1000
+
+
+//#define X WINDOW_WIDTH
+//#define Y WINDOW_HEIGHT
+
+#define PIXEL(x, n) ((float)x/(float)n)
+
+#define INDEX(i) { 0 + i*4, 2 + i*4, 1 + i*4, 0 + i*4, 3 + i*4, 2 + i*4 }
+#define INDEX_ZERO { 0, 0, 0, 0, 0, 0}
    
+struct position {
+    glm::vec2 pos;  
+};
+
+
+struct dimention {
+    glm::vec2 dim;  
+};
+
+struct colour {
+    glm::vec3 colour;
+};
+
+struct rect{
+    position pos;
+    dimention dim;
+    float angle;
+    colour col;
+};
+
+struct isUpdated{
+    bool update;
+};
 
 class VBO {
   public:
@@ -59,13 +93,13 @@ struct vertTexQuad {
     vertTex vertices[4];
 };
 
-struct transform {
-    glm::vec3 pos[4];
+struct indexData {
+    uint indexData[6];
 };
 
-struct colour {
+
+struct textureIndex {
     GLint texIndex;
-    glm::vec3 colour;
 };
 
 struct isDrawn {
@@ -79,15 +113,18 @@ class renderer {
     //float vbo_data[4 * REND_MAX * sizeof(vertTex)];
     int vbo_pos = 0;
     VBO vbo;
-    unsigned int ebo_data[6 * REND_MAX];
+    //unsigned int ebo_data[6 * REND_MAX];
     EBO ebo;
+    Shader* shader;
     renderer();
-    void updateData(int index, vertTexQuad data);
+    void updateData(int index, vertTexQuad* vData, indexData iData);
     void draw();
     int getFree();
 };
 
 struct render {
-    renderer& m_renderer;
+    renderer* m_renderer;
     int slot;
 };
+
+

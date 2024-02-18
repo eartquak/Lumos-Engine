@@ -20,7 +20,8 @@ build_src =  ['src/lumos.cpp',
               'src/shapes.cpp',
               'src/textures.cpp']
 
-to_build = ['examples/texture.cpp']
+
+to_build = ['examples/checkerboard.cpp']
 
 build_src += stb_src
 build_src += to_build

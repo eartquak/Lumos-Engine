@@ -19,8 +19,8 @@ int main() {
             Point* q =
                 new Point(glm::vec2{i * pixel_size, j * pixel_size},
                           glm::vec3{1.0, 0.0, 0.0}, 10.0f, PointType::Pixel);
-            app.add_update_system([p]() { p->draw(); })
-                .add_update_system([q]() { q->draw(); });
+            app.add_update_system([p](App&) { p->draw(); })
+                .add_update_system([q](App&) { q->draw(); });
         }
     }
 
