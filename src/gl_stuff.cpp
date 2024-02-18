@@ -2,7 +2,6 @@
 
 
 
-#define INDEX(i) { 0 + i*4, 2 + i*4, 1 + i*4, 0 + i*4, 3 + i*4, 2 + i*4 }
 
 VAO::VAO() {
     glGenVertexArrays(1, &ref);
@@ -102,7 +101,10 @@ void EBO::updateData(GLuint *indices, int size, int offset) {
     this->unbind();
 }
 
-renderer::renderer() {
+
+
+renderer::renderer() { 
+    shader = new Shader("./assets/shaders/vert.glsl", "./assets/shaders/frag.glsl");
     vao.attachIndex(&ebo);
     ebo.addData(nullptr, 6 * REND_MAX);
     vbo.addData(nullptr, REND_MAX * sizeof(vertTexQuad));
@@ -119,18 +121,23 @@ renderer::renderer() {
     
 }
 
-void renderer::updateData(int index, vertTexQuad data) {
-    vbo.updateData((float*)&data, sizeof(vertTexQuad), index*sizeof(vertTexQuad));
-    uint indexData[] = INDEX((uint)index);
-    ebo.updateData(indexData, sizeof(indexData), index*sizeof(indexData));
+void renderer::updateData(int index, vertTexQuad* vData, indexData iData) {
+    if (vData != nullptr) {
+        vbo.updateData((float*)vData, sizeof(vertTexQuad), index*sizeof(vertTexQuad));
+    }
+    //uint indexData[] = INDEX((uint)index);
+    ebo.updateData(iData.indexData, sizeof(indexData), index*sizeof(indexData));
 }
 
 void renderer::draw() {
+    shader->Activate();
     vao.draw(vbo_pos * 6);
 }
 int renderer::getFree() {
     vbo_pos = vbo_pos + 1;
     return vbo_pos - 1;  
 }
+
+
 
 
