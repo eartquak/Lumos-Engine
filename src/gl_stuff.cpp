@@ -61,7 +61,7 @@ void VBO::unbind() {
 
 void VBO::addData(GLfloat *vertices, int size) {
     this->bind();
-    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)size, vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)size, vertices, GL_DYNAMIC_DRAW);
     this->unbind();
 }
 
@@ -91,7 +91,7 @@ void EBO::unbind() {
 
 void EBO::addData(GLuint *indices, int size) {
     this->bind();
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_DYNAMIC_DRAW);
     this->unbind();
 }
 
@@ -106,7 +106,7 @@ void EBO::updateData(GLuint *indices, int size, int offset) {
 renderer::renderer() { 
     shader = new Shader("./assets/shaders/vert.glsl", "./assets/shaders/frag.glsl");
     vao.attachIndex(&ebo);
-    ebo.addData(nullptr, 6 * REND_MAX);
+    ebo.addData(nullptr, sizeof(indexData) * REND_MAX);
     vbo.addData(nullptr, REND_MAX * sizeof(vertTexQuad));
     vao.attachIndex(&ebo);
     

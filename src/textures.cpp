@@ -30,7 +30,6 @@ Texture::Texture(const char* path, GLenum format, GLenum pixelType,
     texParameter(GL_TEXTURE_WRAP_S, GL_REPEAT);
     texParameter(GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    load(slot);
 
     /*struct vertTex vertices[4];
 
@@ -58,8 +57,9 @@ Texture::Texture(const char* path, GLenum format, GLenum pixelType,
 
 
     this->shader = rend.shader;
-
     u_textures = glGetUniformLocation(shader->ref, "u_textures");
+
+    load(slot);
 }
 
 Texture::~Texture() { glDeleteTextures(1, &ref); }
@@ -72,6 +72,7 @@ void Texture::load(GLuint slot) {
     glBindTextureUnit(slot, ref);
     texUnits.push_back(slot);
     this->texIndex = texUnits.size() - 1;
+    shader->Activate();
     glUniform1iv(u_textures, Texture::texUnits.size(),
                  Texture::texUnits.data());
 }

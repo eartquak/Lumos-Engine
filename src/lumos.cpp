@@ -1,5 +1,6 @@
 #include "lumos.h"
 
+
 int WINDOW_HEIGHT;
 int WINDOW_WIDTH;
 std::vector<std::thread> App::fixed_update_threads;
@@ -18,9 +19,22 @@ void App::create_window() {
         spdlog::error("Failed to initialize GLFW");
     }
 
+    //glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    //glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+    #ifdef DEBUG
+
+        glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
+
+    #endif
+
+    
+
     GLFWwindow* window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT,
                                           this->window_title, nullptr, nullptr);
     this->window = window;
+
+
     glfwSetWindowAttrib(window, GLFW_RESIZABLE, this->resizable);
 
     if (!window) {
@@ -38,6 +52,25 @@ void App::create_window() {
         glfwTerminate();
         // Handle GLEW initialization failure
     }
+
+
+    #ifdef DEBUG
+
+        int context_flag = 0;
+        glGetIntegerv(GL_CONTEXT_FLAGS, &context_flag);
+    
+        if (context_flag & GL_CONTEXT_FLAG_DEBUG_BIT) {
+            spdlog::info("Debug context created");
+            glEnable(GL_DEBUG_OUTPUT);
+            glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+            glDebugMessageCallback(glDebugOutput, NULL);
+            glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
+        }
+        else {
+            spdlog::error("Unable to create debug context");
+        }
+    
+    #endif
 
     //spdlog::info("Using OpenGL version {}, and C++ version {} ",
     //             glGetString(GL_VERSION), __cplusplus);
@@ -290,7 +323,7 @@ App& App::draw() {
                 }
                 renderer->updateData(render.slot, &vertQuad, INDEX((uint)render.slot));
                 isUpdated.update = false;
-                printf("updated vbo into renderer at %d, %d\n", i++, renderer->vbo_pos);
+                // printf("updated vbo into renderer at %d, %d\n", i++, renderer->vbo_pos);
             }
             else {
                 renderer->updateData(render.slot, nullptr, INDEX_ZERO);
@@ -319,3 +352,21 @@ void updateRectS2D(glm::vec2 pos, glm::vec2 dim, float angle, vertTexQuad& vertQ
     
 }
 */
+
+
+void glDebugOutput(GLenum source, GLenum type, 
+                    unsigned int id, GLenum severity, 
+                    GLsizei length, const char *message, 
+                    const void *userParam) {
+
+    switch (type) {
+        case GL_DEBUG_TYPE_ERROR: 
+            spdlog::error("OpenGL Error Message ID {0}: {1}", id, message);
+            break;
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+            spdlog::debug("OpenGL Debug Message (Deprecated Behaviour) ID {0}:, {1}", id, message);
+        default:
+            spdlog::debug("OpenGL Debug Message ID {0}: {1}", id, message);
+
+    }
+}

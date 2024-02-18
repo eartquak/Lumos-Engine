@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include "shader.h"
 #include "entt/entt.hpp"
+#include <spdlog/spdlog.h>
 
 #define REND_MAX 1000
 
