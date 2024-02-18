@@ -44,3 +44,9 @@ Intermediates/
 
 #docs
 docs/
+
+#Vim Session files
+Session.vim
+
+#cache files
+.cache/

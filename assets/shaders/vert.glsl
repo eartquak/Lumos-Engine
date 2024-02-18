@@ -8,8 +8,6 @@ layout (location = 1) in vec3 v_colour;
 layout (location = 2) in vec2 v_texCoord;
 // Texture Index
 layout (location = 3) in float v_texIndex;
-// Scale
-layout (location = 4) in float v_scale;
  
 
 
@@ -21,7 +19,7 @@ out float f_texIndex;
 
 void main()
 {
-	gl_Position = vec4(v_pos.x + v_pos.x * v_scale, v_pos.y + v_pos.y * v_scale, v_pos.z + v_pos.z * v_scale, 1.0);
+	gl_Position = vec4(v_pos.x, v_pos.y, v_pos.z, 1.0);
     
 	f_colour = v_colour;
 

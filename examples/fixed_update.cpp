@@ -2,9 +2,9 @@
 
 #include "lumos.h"
 
-void hello_world() { spdlog::debug("Hello World"); }
+void hello_world(App&) { spdlog::debug("Hello World"); }
 
-void bye_world() { spdlog::debug("Bye World"); }
+void bye_world(App&) { spdlog::debug("Bye World"); }
 
 int main() {
     App app = App();

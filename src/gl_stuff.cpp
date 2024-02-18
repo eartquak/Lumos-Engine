@@ -1,5 +1,8 @@
 #include "gl_stuff.h"
 
+
+
+
 VAO::VAO() {
     glGenVertexArrays(1, &ref);
 }
@@ -62,9 +65,9 @@ void VBO::addData(GLfloat *vertices, int size) {
     this->unbind();
 }
 
-void VBO::updateData(GLfloat *vertices, int size) {
+void VBO::updateData(GLfloat *vertices, int size, int offset) {
     this->bind();
-    glBufferSubData(GL_ARRAY_BUFFER, 0, (GLsizeiptr)size, vertices);
+    glBufferSubData(GL_ARRAY_BUFFER, offset, size, vertices);
     this->unbind();
 }
 
@@ -91,6 +94,50 @@ void EBO::addData(GLuint *indices, int size) {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, indices, GL_STATIC_DRAW);
     this->unbind();
 }
+
+void EBO::updateData(GLuint *indices, int size, int offset) {
+    this->bind();
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, offset, size, indices);
+    this->unbind();
+}
+
+
+
+renderer::renderer() { 
+    shader = new Shader("./assets/shaders/vert.glsl", "./assets/shaders/frag.glsl");
+    vao.attachIndex(&ebo);
+    ebo.addData(nullptr, 6 * REND_MAX);
+    vbo.addData(nullptr, REND_MAX * sizeof(vertTexQuad));
+    vao.attachIndex(&ebo);
+    
+    vao.linkEnableAttrib(&vbo, 0, 3, GL_FLOAT, sizeof(struct vertTex),
+                         (void*)offsetof(vertTex, position));
+    vao.linkEnableAttrib(&vbo, 1, 3, GL_FLOAT, sizeof(struct vertTex),
+                         (void*)offsetof(vertTex, colour));
+    vao.linkEnableAttrib(&vbo, 2, 2, GL_FLOAT, sizeof(struct vertTex),
+                         (void*)offsetof(vertTex, texCoord));
+    vao.linkEnableAttrib(&vbo, 3, 1, GL_FLOAT, sizeof(struct vertTex),
+                         (void*)offsetof(vertTex, texIndex));
+    
+}
+
+void renderer::updateData(int index, vertTexQuad* vData, indexData iData) {
+    if (vData != nullptr) {
+        vbo.updateData((float*)vData, sizeof(vertTexQuad), index*sizeof(vertTexQuad));
+    }
+    //uint indexData[] = INDEX((uint)index);
+    ebo.updateData(iData.indexData, sizeof(indexData), index*sizeof(indexData));
+}
+
+void renderer::draw() {
+    shader->Activate();
+    vao.draw(vbo_pos * 6);
+}
+int renderer::getFree() {
+    vbo_pos = vbo_pos + 1;
+    return vbo_pos - 1;  
+}
+
 
 
 

@@ -46,7 +46,7 @@ int main() {
         grid.push_back(temp);
     }
 
-    app->add_update_system([&] {
+    app->add_update_system([&] (App& app) {
            for (size_t i = 0; i < GRID_SIZE_X; i++) {
                for (size_t j = 0; j < GRID_SIZE_Y; j++) {
                    if (grid[i][j]->is_visible) {
@@ -57,12 +57,12 @@ int main() {
            locator->draw();
        })
         .add_fixed_update_system(  // Systems for updating particle physics
-            [&] {
+            [grid, locator] (App& app) {
                 locator->radius = brushRadius * 2.0f;
 
                 locator->position =
-                    glm::vec2{std::get<0>(app->get_mouse_position()),
-                              std::get<1>(app->get_mouse_position())};
+                    glm::vec2{std::get<0>(app.get_mouse_position()),
+                              std::get<1>(app.get_mouse_position())};
 
                 for (size_t i = 0; i < GRID_SIZE_X; i++) {
                     for (size_t j = 1; j < GRID_SIZE_Y;

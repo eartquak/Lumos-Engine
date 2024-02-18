@@ -1,46 +1,43 @@
 #pragma once
+
+
+
 #include "gl_stuff.h"
 #include "shader.h"
 #include "stb/stb_image.h"
 #include <stdio.h>
 #include <spdlog/spdlog.h>
+#include "entt/entt.hpp"
+//#include "lumos.h"
 
-struct vertTex {
-    glm::vec3 position;
-    glm::vec3 colour;
-    glm::vec2 texCoord;
-    float texIndex;
-    float scale;
-};
 
-struct rect {
-    glm::vec2 pos;
-    glm::vec2 dim;
-};
+
 
 
 class Texture {
-    GLuint texIndex;
-    VAO vao;
-    VBO vbo;
-    EBO ebo;
-    static Shader* shader;
     GLuint u_textures;
+    Shader* shader;
   public:
+    GLuint texIndex;
     GLuint ref;
-    static GLuint uniform;
     int width, height, numColCh;
-    Texture(const char* path, GLenum format, GLenum pixelType, rect rect, GLuint slot);
+    Texture(const char* path, GLenum format, GLenum pixelType, GLuint slot, renderer& rend);
     ~Texture();
     void texParameter(GLenum pname, GLint param);
     void load(GLuint slot);
     void unload();
     static std::vector<int> texUnits;
-    static void initShader();
-    void draw();
-    void updateRect(rect rect);
 };
 
 
 
+
+
+
+
+    
+
+
+
+    
 

@@ -6,14 +6,17 @@
 #pragma once
 
 #include <spdlog/spdlog.h>
-
+#include <stdio.h>
+#include "gl_stuff.h"
+#include <GLFW/glfw3.h>
 #include <functional>
 #include <iostream>
 #include <thread>
 #include <vector>
-
 #include "data.h"
 #include "shapes.h"
+#include "entt/entt.hpp"
+#include "textures.h"
 
 /**
  * @class App
@@ -22,19 +25,23 @@
  * The App class manages the main loop, window creation, and system updates in
  * the Lumos application.
  */
+
+
+
 class App {
    private:
     const char* window_title;  ///< Title of the application window.
     GLFWwindow* window;        ///< GLFW window object.
-    std::vector<std::function<void()>>
+    std::vector<std::function<void(App&)>>
         startup_functions;  ///< List of startup functions.
-    std::vector<std::function<void()>>
+    std::vector<std::function<void(App&)>>
         update_functions;  ///< List of update functions.
-    std::vector<std::pair<std::function<void()>, int>>
+    std::vector<std::pair<std::function<void(App&)>, int>>
         fixed_update_functions;  ///< List of fixed update functions with
                                  ///< intervals.
     static std::vector<std::thread>
         fixed_update_threads;  ///< List of fixed update threads.
+    
     std::vector<std::function<void(int, int, int, int)>>
         key_callback_functions;  ///< List of key callback functions.
     std::vector<std::function<void(int, int)>>
@@ -44,12 +51,14 @@ class App {
     bool resizable;         ///< Flag indicating if the window is resizable.
     bool headless = false;  ///< Flag indicating headless mode.
     bool __is_mouse_pressed = false; ///< Flag indicating if the mouse is pressed.
+    
 
     /**
      * @brief Creates the application window using GLFW.
      *
      * If the application is in headless mode, no window is created.
      */
+
     void create_window();
 
    public:
@@ -78,19 +87,18 @@ class App {
      */
     ~App();
 
-    App& add_startup_system(std::function<void()> function);
-    App& add_update_system(std::function<void()> function);
-    App& add_fixed_update_system(std::function<void()> function,
+    App& add_startup_system(std::function<void(App&)> function);
+    App& add_update_system(std::function<void(App&)> function);
+    App& add_fixed_update_system(std::function<void(App&)> function,
                                  int milliseconds = 1000 / 60);
-    App& add_key_callback_system(
-        std::function<void(int, int, int, int)> function);
+    App& add_key_callback_system(std::function<void(int, int, int, int)> function);
     App& add_mouse_callback_system(std::function<void(int, int)> function);
     App& add_scroll_callback_system(std::function<void(int, int, int)> function);
+    App& draw();
 
     std::pair<double, double> get_mouse_position();
-
     bool is_mouse_pressed();
-
+    entt::registry reg;
     /**
      * @brief Runs the Lumos application.
      *
@@ -102,3 +110,9 @@ class App {
 
     void close();
 };
+
+
+entt::entity sprite2D(App& app, renderer& rend, rect& rect_in, Texture& texture, bool isShown);
+
+entt::entity sprite2D(App& app, renderer& rend, rect& rect_in, bool isShown);
+
