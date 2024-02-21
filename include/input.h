@@ -10,6 +10,8 @@ class input {
     GLFWwindow* window = nullptr;
     static inputPos mousePos;
     static inputPos scrollPos;
+    int width;
+    int height;
     input(GLFWwindow* window);
     ~input();
 
@@ -19,6 +21,7 @@ class input {
     //Mouse Handling
     static void cursorCallback(GLFWwindow* window, double xpos, double ypos);
     bool isMousePressed(int button);
+    inputPos getMousePosition();
 
     //Scroll Callback
     static void scrollCallback(GLFWwindow* window, double xoffset, double yoffset);

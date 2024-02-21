@@ -61,8 +61,8 @@ int main() {
                 locator->radius = brushRadius * 2.0f;
 
                 locator->position =
-                    glm::vec2{app.Input->mousePos.x,
-                              app.Input->mousePos.y};
+                    glm::vec2{app.Input->getMousePosition().x,
+                              app.Input->getMousePosition().y};
 
                 for (size_t i = 0; i < GRID_SIZE_X; i++) {
                     for (size_t j = 1; j < GRID_SIZE_Y;
@@ -96,10 +96,10 @@ int main() {
             if (app.Input->isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
                 spdlog::info("Left mouse button pressed");
                 spdlog::info("Mouse position: {}, {}",
-                             app.Input->mousePos.x,
-                             app.Input->mousePos.y);
-                double mouseX = app.Input->mousePos.x;
-                double mouseY = app.Input->mousePos.y;
+                             app.Input->getMousePosition().x,
+                             app.Input->getMousePosition().y);
+                double mouseX = app.Input->getMousePosition().x;
+                double mouseY = app.Input->getMousePosition().y;
                 // Apply forces to particles in a radius around the mouse
                 for (size_t i = 0; i < GRID_SIZE_X; i++) {
                     for (size_t j = 0; j < GRID_SIZE_Y; j++) {

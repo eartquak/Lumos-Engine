@@ -22,7 +22,7 @@ build_src =  ['src/lumos.cpp',
               'src/input.cpp']
 
 
-to_build = ['examples/sand_fall.cpp']
+to_build = ['examples/sand_sim.cpp']
 
 build_src += stb_src
 build_src += to_build
