@@ -36,8 +36,8 @@ int main() {
             Quad* q = new Quad{
                 glm::vec2{(WORLD_WIDTH / GRID_SIZE_X) * CELL_SIZE_X * i,
                           (WORLD_HEIGHT / GRID_SIZE_Y) * CELL_SIZE_Y * j},
-                (WORLD_HEIGHT / GRID_SIZE_Y) * CELL_SIZE_Y,
-                (WORLD_WIDTH / GRID_SIZE_X) * CELL_SIZE_X,
+                ((float)WORLD_HEIGHT / GRID_SIZE_Y) * CELL_SIZE_Y,
+                ((float)WORLD_WIDTH / GRID_SIZE_X) * CELL_SIZE_X,
                 //  glm::vec3{float(rand()) / RAND_MAX, 0.0, 0.0},
                 glm::vec3{red, green, blue}, PointType::Pixel};
             q->is_visible = false;
@@ -46,7 +46,7 @@ int main() {
         grid.push_back(temp);
     }
 
-    app->add_update_system([&] (App& app) {
+    app->add_update_system([grid, locator] (App&) {
            for (size_t i = 0; i < GRID_SIZE_X; i++) {
                for (size_t j = 0; j < GRID_SIZE_Y; j++) {
                    if (grid[i][j]->is_visible) {
@@ -61,8 +61,8 @@ int main() {
                 locator->radius = brushRadius * 2.0f;
 
                 locator->position =
-                    glm::vec2{std::get<0>(app.get_mouse_position()),
-                              std::get<1>(app.get_mouse_position())};
+                    glm::vec2{app.Input->mousePos.x,
+                              app.Input->mousePos.y};
 
                 for (size_t i = 0; i < GRID_SIZE_X; i++) {
                     for (size_t j = 1; j < GRID_SIZE_Y;
@@ -92,14 +92,14 @@ int main() {
                 }
             },
             10)
-        .add_mouse_callback_system([&](int button, int action) {
-            if (button == GLFW_MOUSE_BUTTON_LEFT && app->is_mouse_pressed()) {
+        .add_update_system([grid](App& app) {
+            if (app.Input->isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
                 spdlog::info("Left mouse button pressed");
                 spdlog::info("Mouse position: {}, {}",
-                             std::get<0>(app->get_mouse_position()),
-                             std::get<1>(app->get_mouse_position()));
-                double mouseX = std::get<0>(app->get_mouse_position());
-                double mouseY = std::get<1>(app->get_mouse_position());
+                             app.Input->mousePos.x,
+                             app.Input->mousePos.y);
+                double mouseX = app.Input->mousePos.x;
+                double mouseY = app.Input->mousePos.y;
                 // Apply forces to particles in a radius around the mouse
                 for (size_t i = 0; i < GRID_SIZE_X; i++) {
                     for (size_t j = 0; j < GRID_SIZE_Y; j++) {
@@ -121,11 +121,12 @@ int main() {
                 }
             }
         })
-        .add_scroll_callback_system([&](int xoffset, int yoffset, int action) {
+        .add_update_system([grid](App& app) {
             spdlog::info("Scroll callback function called");
-            spdlog::info("xoffset: {}, yoffset: {}, action: {}", xoffset,
-                         yoffset, action);
-            brushRadius += yoffset * SCROLL_SENSITIVITY;
+            spdlog::info("xoffset: {}, yoffset: {}", 
+                        app.Input->scrollPos.x,
+                        app.Input->scrollPos.y);
+            brushRadius += app.Input->scrollPos.y * SCROLL_SENSITIVITY;
             brushRadius = std::max(float(CELL_SIZE_X),
                                    std::min(brushRadius,
                                             100.0f));  // Adjust the maximum
