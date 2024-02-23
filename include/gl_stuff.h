@@ -110,6 +110,7 @@ struct isDrawn {
 
 class renderer {
   public:
+    std::vector<int> freeStack;
     VAO vao;
     //float vbo_data[4 * REND_MAX * sizeof(vertTex)];
     int vbo_pos = 0;
@@ -120,6 +121,7 @@ class renderer {
     renderer();
     void updateData(int index, vertTexQuad* vData, indexData iData);
     void draw();
+    void drawQuad(glm::vec2 pos, glm::vec2 dim, glm::vec3 col, GLint texIndex);
     int getFree();
 };
 

@@ -104,6 +104,7 @@ class App {
     //std::pair<double, double> get_mouse_position();
     //bool is_mouse_pressed();
     entt::registry reg;
+    renderer* rend;
     input* Input;
     /**
      * @brief Runs the Lumos application.
@@ -118,9 +119,9 @@ class App {
 };
 
 
-entt::entity sprite2D(App& app, renderer& rend, rect& rect_in, Texture& texture, bool isShown);
+entt::entity sprite2D(App& app, rect& rect_in, Texture& texture, bool isShown);
 
-entt::entity sprite2D(App& app, renderer& rend, rect& rect_in, bool isShown);
+entt::entity sprite2D(App& app, rect& rect_in, bool isShown);
 
 void glDebugOutput(GLenum source, GLenum type, 
                     unsigned int id, GLenum severity, 
