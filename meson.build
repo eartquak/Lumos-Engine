@@ -32,7 +32,7 @@ executable(
   dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], 
   include_directories : [incdir, extdir, enttdir, glmdir],
   ## Enable for examples that use shapes.cpp
-  # cpp_args: ['-DLEGACY'],
+  cpp_args: ['-DLEGACY'],
   # Enable for profiling
   # cpp_args: ['-pg', '-no-pie', '-fno-builtin'],
   # link_args: ['-pg', '-no-pie', '-fno-builtin'],
