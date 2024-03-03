@@ -49,7 +49,7 @@ int main() {
         }
     }
 
-    app.add_update_system([&grid, &locator] (App& app) {
+    app.add_update_system([&grid] (App& app) {
            for (size_t i = 0; i < GRID_SIZE_X; i++) {
                for (size_t j = 0; j < GRID_SIZE_Y; j++) {
                    auto &toDraw = app.reg.get<isDrawn>(grid[i][j].entt);
@@ -61,7 +61,7 @@ int main() {
                    }
                }
            }
-           locator->draw();
+           //locator->draw();
        })
         .add_fixed_update_system(  // Systems for updating particle physics
             [&grid, &locator] (App& app) {
@@ -97,14 +97,13 @@ int main() {
                         }
                     }
                 }
-            },
-            10)
+            }, 10)
         .add_update_system([&grid](App& app) {
             if (app.Input->isMousePressed(GLFW_MOUSE_BUTTON_LEFT)) {
-                spdlog::info("Left mouse button pressed");
-                spdlog::info("Mouse position: {}, {}",
-                             app.Input->getMousePosition().x,
-                             app.Input->getMousePosition().y);
+                //spdlog::info("Left mouse button pressed");
+                //spdlog::info("Mouse position: {}, {}",
+                //             app.Input->getMousePosition().x,
+                //             app.Input->getMousePosition().y);
                 double mouseX = app.Input->getMousePosition().x;
                 double mouseY = app.Input->getMousePosition().y;
                 // Apply forces to particles in a radius around the mouse
@@ -119,28 +118,33 @@ int main() {
                             // Apply some force or update particle state
                             // here For now, just make them visible
                             grid[i][j].isShown = true;
-                            spdlog::debug(
-                                "Putting pixel at {} {}",
-                                (WORLD_WIDTH / GRID_SIZE_X) * CELL_SIZE_X * i,
-                                (WORLD_HEIGHT / GRID_SIZE_Y) * CELL_SIZE_Y * j);
+                            //spdlog::debug(
+                            //    "Putting pixel at {} {}",
+                            //    (WORLD_WIDTH / GRID_SIZE_X) * CELL_SIZE_X * i,
+                            //    (WORLD_HEIGHT / GRID_SIZE_Y) * CELL_SIZE_Y * j);
                         }
                     }
                 }
             }
+            if (app.Input->isKeyPressed(GLFW_KEY_ESCAPE)) {
+                spdlog::info("Escape Pressed");
+                app.close();
+            }
         })
         .add_update_system([](App& app) {
-            spdlog::info("Scroll callback function called");
-            spdlog::info("xoffset: {}, yoffset: {}", 
-                        app.Input->scrollPos.x,
-                        app.Input->scrollPos.y);
-            brushRadius += app.Input->scrollPos.y * SCROLL_SENSITIVITY;
+            //spdlog::info("Scroll callback function called");
+            //spdlog::info("xoffset: {}, yoffset: {}", 
+            //            app.Input->scrollPos.x,
+            //            app.Input->scrollPos.y);
+            brushRadius = app.Input->scrollPos.y * SCROLL_SENSITIVITY;
             brushRadius = std::max(float(CELL_SIZE_X),
                                    std::min(brushRadius,
                                             100.0f));  // Adjust the maximum
                                                        // brush radius if needed
-            spdlog::info("Brush radius: {}", brushRadius);
+            //spdlog::info("Brush radius: {}", brushRadius);
         });
     app.run();
 
     delete locator;
+    return 0;
 }

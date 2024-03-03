@@ -1,9 +1,9 @@
 #include "lumos.h"
 
 
+std::vector<std::thread> App::fixed_update_threads;
 int WINDOW_HEIGHT;
 int WINDOW_WIDTH;
-std::vector<std::thread> App::fixed_update_threads;
 
 void App::create_window() {
     if (this->headless) {
@@ -91,7 +91,9 @@ App::App(int window_width, int window_height, const char* window_title,
     this->reg = entt::basic_registry();
 
     this->create_window();
+    #ifndef LEGACY
     this->rend = new renderer();
+    #endif
 }
 
 // Opens app in headless mode
@@ -146,6 +148,7 @@ App& App::add_scroll_callback_system(
 void App::close() {
     glfwSetWindowShouldClose(this->window, GLFW_TRUE);
     glfwTerminate();
+    running = false;
 }
 
 /*
@@ -237,18 +240,24 @@ void App::run() {
     spdlog::info("Running the main loop");
     if (!this->headless) {
         // Main loop
-        while (!glfwWindowShouldClose(this->window)) {
-            glClear(GL_COLOR_BUFFER_BIT);
+        running = true;
 
+        while (!glfwWindowShouldClose(this->window) && running) {
+
+            // Poll for and process events
+            glfwPollEvents();
+
+            glClear(GL_COLOR_BUFFER_BIT);
             // Update Functions (update every frame i.e every loop)
             for (std::function<void(App&)>& function : update_functions) {
                 function(*this);
             }
+            #ifndef LEGACY
             draw();
+            #endif
             // Swap front and back buffers
             glfwSwapBuffers(this->window);
-            // Poll for and process events
-            glfwPollEvents();
+            glFrameTerminatorGREMEDY();
         }
     }
 
@@ -276,7 +285,7 @@ entt::entity sprite2D(App& app, rect& rect_in, Texture& texture, bool isShown) {
     reg.emplace<isDrawn>(s2Dentt, isShown);
     reg.emplace<textureIndex>(s2Dentt, (GLint)texture.texIndex);
     reg.emplace<isUpdated>(s2Dentt, true);
-    spdlog::info("Adding Sprite2D entity");
+    //spdlog::info("Adding Sprite2D entity");
 
     return s2Dentt;
 }
@@ -291,22 +300,24 @@ entt::entity sprite2D(App& app, rect& rect_in, bool isShown) {
     reg.emplace<isDrawn>(s2Dentt, isShown);
     reg.emplace<textureIndex>(s2Dentt, (GLint)-1);
     reg.emplace<isUpdated>(s2Dentt, true);
-    spdlog::info("Adding Sprite2D entity");
+    //spdlog::info("Adding Sprite2D entity");
 
     return s2Dentt;
 }
 
 App& App::draw() {
     //spdlog::info("Draw is Called");
-    auto view = reg.view<isDrawn, position, dimention, colour, textureIndex, isUpdated>(); 
-    for(auto [entity, isDrawn, position, dimention, colour, textureIndex, isUpdated]: view.each()) {
-        //printf("apple\n");
-        if (isDrawn.draw) {
-            glm::vec2 pos = { (position.pos.x - 0.5f) * 2.0f, (position.pos.y - 0.5f) * 2.0f};
-            glm::vec2 dim = { (dimention.dim.x * 2.0f), (dimention.dim.y * 2.0f)};
-            glm::vec3 col = colour.colour;
-            GLint texIndex = textureIndex.texIndex;
+    auto view = reg.view<isDrawn, position, dimention, colour, textureIndex>(); 
+    for(auto entity: view) {
+        auto isDrawn_m = view.get<isDrawn>(entity);
+        if (isDrawn_m.draw) {
+            auto [position_m, dimention_m, colour_m, textureIndex_m] = view.get<position, dimention, colour, textureIndex>(entity);
+            glm::vec2 pos = { (position_m.pos.x - 0.5f) * 2.0f, (position_m.pos.y - 0.5f) * 2.0f};
+            glm::vec2 dim = { (dimention_m.dim.x * 2.0f), (dimention_m.dim.y * 2.0f)};
+            glm::vec3 col = colour_m.colour;
+            GLint texIndex = textureIndex_m.texIndex;
             rend->drawQuad(pos, dim, col, texIndex);
+            //spdlog::debug("rend pos: {}, {}", pos.x, pos.y);
             //printf("updated vbo into renderer at %d\n", rend->vbo_pos);
         }
     }

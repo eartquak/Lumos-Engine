@@ -19,6 +19,8 @@
 #include "entt/entt.hpp"
 #include "textures.h"
 #include "input.h"
+#include <chrono>
+#include <ctime>
 
 
 /**
@@ -57,6 +59,7 @@ class App {
 
     bool resizable;         ///< Flag indicating if the window is resizable.
     bool headless = false;  ///< Flag indicating headless mode.
+    bool running = false;
     
     /**
      * @brief Creates the application window using GLFW.
@@ -67,6 +70,7 @@ class App {
     void create_window();
 
    public:
+    
     /**
      * @brief Constructor for the App class.
      * @param window_width Width of the application window.

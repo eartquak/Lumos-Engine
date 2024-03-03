@@ -123,13 +123,15 @@ renderer::renderer() {
 
 void renderer::updateData(int index, vertTexQuad* vData, indexData iData) {
     if (vData != nullptr) {
-        vbo.updateData((float*)vData, sizeof(vertTexQuad), index*sizeof(vertTexQuad));
+        vbo_data[index] = *vData;
     }
     //uint indexData[] = INDEX((uint)index);
-    ebo.updateData(iData.indexData, sizeof(indexData), index*sizeof(indexData));
+    ebo_data[index] = iData;
 }
 
 void renderer::draw() {
+    vbo.updateData((float*)vbo_data, vbo_pos * sizeof(vertTexQuad), 0);
+    ebo.updateData((uint*)ebo_data, vbo_pos * sizeof(indexData), 0);
     shader->Activate();
     vao.draw(vbo_pos * 6);
     vbo_pos = 0;
