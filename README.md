@@ -1,7 +1,7 @@
 # Lumos-Engine
 A 2-D game engine written in C++.
 
-<img src="https://github.com/crux-bphc/Lumos-Engine/assets/59739923/713fddf7-68fb-489e-a8d1-397d9fc11d8a" width="250" height="250"/>
+https://github.com/crux-bphc/Lumos-Engine/assets/59739923/18a7a658-9ccd-4bf1-9cc4-794b80837474
 
 # How to run
 1. Run `meson setup build` to create the build directory
