@@ -2,10 +2,11 @@
 
 #include <cmath>
 #include <GL/glew.h>
-//#include <GLFW/glfw3.h>
+#include "window.h"
 #include <iostream>
 #include "vector"
 #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 #include <stdio.h>
 #include "shader.h"
 #include "entt/entt.hpp"
@@ -23,30 +24,16 @@ typedef std::chrono::high_resolution_clock Clock;
 #define PIXEL(x, n) ((float)x/(float)n)
 
 #define INDEX(i) { 0 + i*4, 2 + i*4, 1 + i*4, 0 + i*4, 3 + i*4, 2 + i*4 }
-#define INDEX_ZERO { 0, 0, 0, 0, 0, 0}
-   
-struct position {
-    glm::vec2 pos;  
-};
+#define INDEX_ZERO { 0, 0, 0, 0, 0, 0} 
 
+typedef glm::vec4 Position;
 
-struct dimention {
-    glm::vec2 dim;  
-};
-
-struct colour {
-    glm::vec3 colour;
-};
-
-struct rect{
-    position pos;
-    dimention dim;
+struct Sprite {
+    glm::vec2 dimension;
+    glm::vec2 offset;
     float angle;
-    colour col;
-};
-
-struct isUpdated{
-    bool update;
+    glm::vec3 colour;
+    bool isRendered;
 };
 
 class VBO {
@@ -85,6 +72,24 @@ class VAO {
 };
 
 // Restriction on number of quads rendered by renderer - 1000
+//
+//
+
+struct Canvas {
+    glm::vec2 offset;
+    glm::vec2 dimensions;
+    glm::vec2 scales;
+    glm::float32 angle;
+};
+
+struct TexInfo {
+    GLint texIndex;
+    glm::float32 uvmap[4];
+};
+
+struct ColInfo {
+    glm::vec4 colour[4];
+};
 
 struct vertTex {
     glm::vec3 position;
@@ -110,10 +115,16 @@ struct isDrawn {
     bool draw;
 };
 
-
-class renderer {
+class OpenGL {
   public:
-    std::vector<int> freeStack;
+    OpenGL(Window& window);
+};
+
+
+class Renderer {
+  public:
+    Window& window;
+    OpenGL openGL;
     VAO vao;
     vertTexQuad vbo_data[REND_MAX];
     indexData ebo_data[REND_MAX];
@@ -122,16 +133,17 @@ class renderer {
     //unsigned int ebo_data[6 * REND_MAX];
     EBO ebo;
     Shader* shader;
-    renderer();
+    Renderer(Window& window);
     void updateData(int index, vertTexQuad* vData, indexData iData);
     void draw();
     void drawQuad(glm::vec2 pos, glm::vec2 dim, glm::vec3 col, GLint texIndex);
-    int getFree();
-};
-
-struct render {
-    renderer* m_renderer;
-    int slot;
+    void clear();
+    void markFrameTermination();
+    void drawCanvasCol(Position pos, Canvas canv, ColInfo colInfo);
 };
 
 
+void glDebugOutput(GLenum source, GLenum type, 
+                    unsigned int id, GLenum severity, 
+                    GLsizei length, const char *message, 
+                    const void *userParam);

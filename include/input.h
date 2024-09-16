@@ -1,19 +1,22 @@
-#include <GLFW/glfw3.h>
+#pragma once
+
+#include "window.h"
+#include <spdlog/spdlog.h>
 
 struct inputPos {
     double x = 0;
     double y = 0;
 };
 
-class input {
+class Input {
   public:
-    GLFWwindow* window = nullptr;
+    Window& window;
     static inputPos mousePos;
     static inputPos scrollPos;
     int width;
     int height;
-    input(GLFWwindow* window);
-    ~input();
+    Input(Window& window);
+    void pollEvents();
 
     //Keyboard Handling
     bool isKeyPressed(int key);

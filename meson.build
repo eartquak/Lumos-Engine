@@ -17,12 +17,14 @@ stb_src = ['external/stb/stb.cpp']
 build_src =  ['src/lumos.cpp',
               'src/gl_stuff.cpp',
               'src/shader.cpp',
-              'src/shapes.cpp',
+              # 'src/shapes.cpp',
               'src/textures.cpp',
-              'src/input.cpp']
+              'src/input.cpp',
+              'src/ecs.cpp',
+              'src/window.cpp']
 
 
-to_build = ['examples/checkerboard.cpp']
+to_build = ['examples/new_rect.cpp']
 
 build_src += stb_src
 build_src += to_build
@@ -32,8 +34,8 @@ executable(
   dependencies: [glfwDep, glewDep, openGLDep, spdlogDep], 
   include_directories : [incdir, extdir, enttdir, glmdir],
   ## Enable for examples that use shapes.cpp
-  cpp_args: ['-DLEGACY'],
+  cpp_args: ['-g', '-DDEBUG'],
   # Enable for profiling
-  # cpp_args: ['-pg', '-no-pie', '-fno-builtin'],
-  # link_args: ['-pg', '-no-pie', '-fno-builtin'],
+  cpp_args: ['-pg', '-no-pie', '-fno-builtin'],
+  link_args: ['-pg', '-no-pie', '-fno-builtin'],
   )

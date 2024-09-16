@@ -1,36 +1,39 @@
 #include "input.h"
 
-inputPos input::mousePos = {0, 0};
-inputPos input::scrollPos = {0, 0};
+inputPos Input::mousePos = {0, 0};
+inputPos Input::scrollPos = {0, 0};
 
-input::input(GLFWwindow* window) {
-    //initialize window pointer;
-    this->window = window;
-    glfwGetWindowSize(window, &width, &height);
-    glfwSetInputMode(window, GLFW_STICKY_KEYS, GLFW_TRUE);
-    glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
-    glfwSetCursorPosCallback(window, cursorCallback);
-    glfwSetScrollCallback(window, scrollCallback);
+Input::Input(Window& window) : window(window) {
+    glfwGetWindowSize(window.window, &width, &height);
+    glfwSetInputMode(window.window, GLFW_STICKY_KEYS, GLFW_TRUE);
+    glfwSetInputMode(window.window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
+    glfwSetCursorPosCallback(window.window, cursorCallback);
+    glfwSetScrollCallback(window.window, scrollCallback);
+    spdlog::info("Input Initialized");
 }
 
-bool input::isKeyPressed(int key) {
-    return (glfwGetKey(window, key) == GLFW_PRESS);
+bool Input::isKeyPressed(int key) {
+    return (glfwGetKey(window.window, key) == GLFW_PRESS);
 }
 
-void input::cursorCallback(GLFWwindow*, double xpos, double ypos) {
+void Input::cursorCallback(GLFWwindow*, double xpos, double ypos) {
     mousePos.x = xpos;
     mousePos.y = ypos;
 }
 
-bool input::isMousePressed(int button) {
-    return (glfwGetMouseButton(window, button) == GLFW_PRESS);
+bool Input::isMousePressed(int button) {
+    return (glfwGetMouseButton(window.window, button) == GLFW_PRESS);
 }
 
-inputPos input::getMousePosition() {
+inputPos Input::getMousePosition() {
     return {mousePos.x, height - mousePos.y};
 }
 
-void input::scrollCallback(GLFWwindow*, double xoffset, double yoffset) {
+void Input::scrollCallback(GLFWwindow*, double xoffset, double yoffset) {
     scrollPos.x += xoffset;
     scrollPos.y += yoffset;
+}
+
+void Input::pollEvents() {
+    glfwPollEvents();
 }

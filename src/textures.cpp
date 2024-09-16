@@ -5,7 +5,7 @@ std::vector<int> Texture::texUnits = {};
 // printf("Compiled...\n");
 
 Texture::Texture(const char* path, GLenum format, GLenum pixelType,
-                 GLuint slot, renderer& rend) {
+                 GLuint slot, Renderer& renderer) {
     stbi_set_flip_vertically_on_load(true);
 
     unsigned char* bytes = stbi_load(path, &width, &height, &numColCh, 0);
@@ -56,7 +56,7 @@ Texture::Texture(const char* path, GLenum format, GLenum pixelType,
     }*/
 
 
-    this->shader = rend.shader;
+    this->shader = renderer.shader;
     u_textures = glGetUniformLocation(shader->ref, "u_textures");
 
     load(slot);
